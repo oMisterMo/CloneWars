@@ -27,8 +27,8 @@ import java.awt.Graphics2D;
  */
 public class TypeB extends Enemy {
 
-    public static final float TYPEB_WIDTH = 25f;
-    public static final float TYPEB_HEIGHT = 25f;
+    public static final float TYPE_B_WIDTH = 25f;
+    public static final float TYPE_B_HEIGHT = 25f;
 
     private float speed;
 
@@ -90,35 +90,40 @@ public class TypeB extends Enemy {
         return stateTime;
     }
 
+    @Override
+    public int getType() {
+        return Enemy.TYPEB;
+    }
+
     public boolean enemyOutOfBounds() {
         return (position.x < 0
-                || position.x + TYPEB_WIDTH > World.WORLD_WIDTH
+                || position.x + TYPE_B_WIDTH > World.WORLD_WIDTH
                 || position.y < 0
-                || position.y + TYPEB_HEIGHT > World.WORLD_HEIGHT);
+                || position.y + TYPE_B_HEIGHT > World.WORLD_HEIGHT);
     }
 
     private void wrapTYPEBold() {
 //        System.out.println(player.position);
         //Wrap from left
         if (position.x < 0 + World.xShift) {
-            position.x = World.WORLD_WIDTH - TYPEB_WIDTH + World.xShift;
+            position.x = World.WORLD_WIDTH - TYPE_B_WIDTH + World.xShift;
 //            bounds.center.x = World.WORLD_WIDTH - bounds.radius + World.xShift;
             bounds.center.x = position.x;
         }
         //Wrap from right
-        if (position.x > World.WORLD_WIDTH - TYPEB_WIDTH + World.xShift) {
+        if (position.x > World.WORLD_WIDTH - TYPE_B_WIDTH + World.xShift) {
             position.x = 0 + World.xShift;
 //            bounds.center.x = bounds.radius + World.xShift;
             bounds.center.x = position.x;
         }
         //Wrap from top
         if (position.y < 0 + World.yShift) {
-            position.y = World.WORLD_HEIGHT - TYPEB_HEIGHT + World.yShift;
+            position.y = World.WORLD_HEIGHT - TYPE_B_HEIGHT + World.yShift;
 //            bounds.center.y = World.WORLD_HEIGHT - bounds.radius + World.yShift;
             bounds.center.y = position.y;
         }
         //Wrap from bottom
-        if (position.y > World.WORLD_HEIGHT - TYPEB_HEIGHT + World.yShift) {
+        if (position.y > World.WORLD_HEIGHT - TYPE_B_HEIGHT + World.yShift) {
             position.y = 0 + World.yShift;
 //            bounds.center.y = bounds.radius + World.yShift;
             bounds.center.y = position.y;
@@ -183,11 +188,11 @@ public class TypeB extends Enemy {
     void gameRender(Graphics2D g) {
         g.setColor(Color.YELLOW);
 //        g.drawRect((int) position.x, (int) position.y,      //rect
-//                (int) TYPEB_WIDTH, (int) TYPEB_HEIGHT);
+//                (int) TYPE_B_WIDTH, (int) TYPE_B_HEIGHT);
         g.drawRect((int) bounds.center.x,
                 (int) bounds.center.y, 1, 1);               //dot
         g.drawOval((int) (bounds.center.x - bounds.radius), //circle
                 (int) (bounds.center.y - bounds.radius),
-                (int) TYPEB_WIDTH, (int) TYPEB_HEIGHT);
+                (int) TYPE_B_WIDTH, (int) TYPE_B_HEIGHT);
     }
 }

@@ -1,14 +1,11 @@
 package clonewars;
 
-import common.Animation;
-import common.SpriteSheet;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import common.Vector2D;
 import java.util.ArrayList;
 
@@ -27,6 +24,7 @@ public class Player extends DynamicGameObject {
     public static final float PLAYER_HEIGHT = 28;   //32
     
     public static final int NO_OF_LIVES = 3;
+    public int lives = NO_OF_LIVES;
     private static final int X_VEL = 200;
     private static final int Y_VEL = 200;
 
@@ -38,7 +36,6 @@ public class Player extends DynamicGameObject {
     public float stateTime = 0;
 
     public ArrayList<Bullet> bullets;
-    public int lives = NO_OF_LIVES;
 
     //For debugging****************************
     private Font f;
@@ -155,6 +152,18 @@ public class Player extends DynamicGameObject {
         //a new bullet to the arraylist
         bullets.add(bullet);
 //        System.out.println("bullets.size() = " + bullets.size());
+    }
+
+    public void fire(float x, float y) {
+        Bullet bullet = new Bullet(position.x + PLAYER_WIDTH / 2 - Bullet.BULLET_WIDTH / 2,
+                position.y + PLAYER_HEIGHT / 2 - Bullet.BULLET_HEIGHT / 2,
+                Bullet.BULLET_WIDTH, Bullet.BULLET_HEIGHT);
+        
+        bullet.velocity.set(x - bullet.position.x, y - bullet.position.y);
+        bullet.velocity.normalize();
+        bullet.velocity.mult(Bullet.BULLET_SPEED);
+
+        bullets.add(bullet);
     }
 
     private void updateBullets(float deltaTime) {

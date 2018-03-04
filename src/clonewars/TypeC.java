@@ -28,8 +28,8 @@ import java.awt.geom.AffineTransform;
  */
 public class TypeC extends Enemy {
 
-    public static final float TYPEC_WIDTH = 25f;
-    public static final float TYPEC_HEIGHT = 25f;
+    public static final float TYPE_C_WIDTH = 25f;
+    public static final float TYPE_C_HEIGHT = 25f;
     public static final float ROTATE_SPEED = 100f;
 
     private float speed;
@@ -97,35 +97,40 @@ public class TypeC extends Enemy {
         return stateTime;
     }
 
+    @Override
+    public int getType() {
+        return Enemy.TYPEC;
+    }
+
     public boolean enemyOutOfBounds() {
         return (position.x < 0
-                || position.x + TYPEC_WIDTH > World.WORLD_WIDTH
+                || position.x + TYPE_C_WIDTH > World.WORLD_WIDTH
                 || position.y < 0
-                || position.y + TYPEC_HEIGHT > World.WORLD_HEIGHT);
+                || position.y + TYPE_C_HEIGHT > World.WORLD_HEIGHT);
     }
 
     private void wrapTYPECold() {
 //        System.out.println(player.position);
         //Wrap from left
         if (position.x < 0 + World.xShift) {
-            position.x = World.WORLD_WIDTH - TYPEC_WIDTH + World.xShift;
+            position.x = World.WORLD_WIDTH - TYPE_C_WIDTH + World.xShift;
 //            bounds.center.x = World.WORLD_WIDTH - bounds.radius + World.xShift;
             bounds.center.x = position.x;
         }
         //Wrap from right
-        if (position.x > World.WORLD_WIDTH - TYPEC_WIDTH + World.xShift) {
+        if (position.x > World.WORLD_WIDTH - TYPE_C_WIDTH + World.xShift) {
             position.x = 0 + World.xShift;
 //            bounds.center.x = bounds.radius + World.xShift;
             bounds.center.x = position.x;
         }
         //Wrap from top
         if (position.y < 0 + World.yShift) {
-            position.y = World.WORLD_HEIGHT - TYPEC_HEIGHT + World.yShift;
+            position.y = World.WORLD_HEIGHT - TYPE_C_HEIGHT + World.yShift;
 //            bounds.center.y = World.WORLD_HEIGHT - bounds.radius + World.yShift;
             bounds.center.y = position.y;
         }
         //Wrap from bottom
-        if (position.y > World.WORLD_HEIGHT - TYPEC_HEIGHT + World.yShift) {
+        if (position.y > World.WORLD_HEIGHT - TYPE_C_HEIGHT + World.yShift) {
             position.y = 0 + World.yShift;
 //            bounds.center.y = bounds.radius + World.yShift;
             bounds.center.y = position.y;
@@ -165,7 +170,7 @@ public class TypeC extends Enemy {
         bounds.center.set(position).add(bounds.radius, bounds.radius);
 //        rotate += stateTime;
         rotate += ROTATE_SPEED * deltaTime;
-        
+
         switch (state) {
             case ENEMY_OFFSCREEN:
                 //If enemy is in bounds of world
@@ -199,14 +204,14 @@ public class TypeC extends Enemy {
 
         g.setColor(Color.PINK);
         g.fillRect((int) position.x, (int) position.y, //rect
-                (int) TYPEC_WIDTH, (int) TYPEC_HEIGHT);
+                (int) TYPE_C_WIDTH, (int) TYPE_C_HEIGHT);
 
 //        g.setColor(Color.WHITE);
 //        g.drawRect((int) bounds.center.x, 
 //                (int) bounds.center.y, 1, 1);                   //dot
 //        g.drawOval((int) (bounds.center.x - bounds.radius),     //circle
 //                (int) (bounds.center.y - bounds.radius),
-//                (int) TYPEC_WIDTH, (int) TYPEC_HEIGHT);
+//                (int) TYPE_C_WIDTH, (int) TYPE_C_HEIGHT);
         g.setTransform(old);
 
     }

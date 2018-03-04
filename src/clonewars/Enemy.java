@@ -29,7 +29,8 @@ abstract class Enemy extends DynamicGameObject {
     public static final int TYPEA = 0;
     public static final int TYPEB = 1;
     public static final int TYPEC = 2;
-    
+    private int type = -1;      //curent type of this enemy
+
     public static final int ENEMY_CHASE = 0;
     public static final int ENEMY_DEAD = 1;
     public static final int ENEMY_IDLE = 2;
@@ -38,7 +39,7 @@ abstract class Enemy extends DynamicGameObject {
 
     public static final float DEATH_TIME = 2;   //in seconds
     public float stateTime; //how long enemy has been in a state
-    
+
     //Player to chase
     protected Player player;
     protected Circle bounds;    //field hides gameObjects rectangles
@@ -46,7 +47,7 @@ abstract class Enemy extends DynamicGameObject {
     public Enemy(float x, float y, float width, float height, Player player) {
         super(x, y, width, height);
         this.player = player;
-        float radius = width/2;
+        float radius = width / 2;
         bounds = new Circle(x + radius, y + radius, radius);
     }
 
@@ -66,6 +67,12 @@ abstract class Enemy extends DynamicGameObject {
     public float getStateTime() {
         System.out.println("NOT CALLED");
         return 0;
+    }
+    
+    public int getType(){
+        //Method should be overridden
+        System.out.println("NOT CALLED");
+        return -1;  //no enemy of type -1
     }
 
 //    @Override

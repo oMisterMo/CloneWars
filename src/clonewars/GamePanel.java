@@ -16,11 +16,13 @@
  */
 package clonewars;
 
+import common.Tween;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -39,9 +41,11 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int GAME_WIDTH = 600;
     public static final int GAME_HEIGHT = 600;
     //Game States
-    public static final int WORLD_STATE_RUNNING = 0;
-    public static final int WORLD_STATE_GAMEOVER = 1;
-    public int state = WORLD_STATE_RUNNING;
+    public static final int WORLD_STATE_READY = 0;
+    public static final int WORLD_STATE_RUNNING = 1;
+    public static final int WORLD_STATE_GAMEOVER = 2;
+    public static int state = WORLD_STATE_READY;
+//    public int state = WORLD_STATE_RUNNING;
 
     private boolean running = false;
     private Thread thread;
@@ -53,7 +57,16 @@ public class GamePanel extends JPanel implements Runnable {
     private final int FPS = 60;
     private long averageFPS;
 
+    //Ready Screen
+    public static final float TWEEN_TIME = 1.5f;
+    private final String wave = "WAVE ";
+    private float waveX, waveY;
+    float x1 = GAME_WIDTH / 2 - 150;
+    float x2 = GAME_WIDTH / 2 + 150;
+    float y;
+
     private final World world;
+    private float elapsedTime = 0;
 
     public GamePanel() {
         super();
@@ -64,6 +77,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         initInput();
         Assets.loadImages();
+
+        waveX = GAME_WIDTH / 2 - 150;
+        waveY = -100;
+        y = GAME_HEIGHT + 100;
         world = new World();
     }
 
@@ -102,7 +119,11 @@ public class GamePanel extends JPanel implements Runnable {
         running = true;
         image = new BufferedImage(GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
-//        g.setFont(new Font("Courier new", Font.PLAIN, 25));
+        //Set correct font & size
+        g.setFont(new Font("Courier new", Font.PLAIN, 85));
+        //Enable antialiasing
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
         //GAME LOOP
         while (running) {
@@ -159,9 +180,38 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    private void updateReady(float deltaTime) {
+        elapsedTime += deltaTime;
+        //Tween title
+        if (elapsedTime < TWEEN_TIME) {
+            waveY = (float) Tween.easeOutQuad(elapsedTime, -100, (400), TWEEN_TIME);
+            y = (float) Tween.easeOutQuad(elapsedTime,
+                    610, -300, TWEEN_TIME);
+        }
+        //Set game to running
+        if (elapsedTime >= 5) {
+            state = WORLD_STATE_RUNNING;
+            //Don't forget to set small font again
+            g.setFont(new Font("Courier new", Font.PLAIN, 20));
+            //reset variables
+            waveY = -100;
+            y = GAME_HEIGHT + 100;
+            elapsedTime = 0;
+        }
+    }
+
+    private void drawReady(Graphics2D g) {
+        g.setColor(Color.WHITE);
+        g.drawString(wave + (World.currentWave + 1), waveX, waveY);
+        g.drawLine((int) x1, (int) y, (int) x2, (int) y);
+    }
+
     /* ********************* UPDATE & RENDER ************************* */
     private void gameUpdate(float deltaTime) {
         switch (state) {
+            case WORLD_STATE_READY:
+                updateReady(deltaTime);
+                break;
             case WORLD_STATE_RUNNING:
                 world.gameUpdate(deltaTime);
                 break;
@@ -177,6 +227,9 @@ public class GamePanel extends JPanel implements Runnable {
         g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
         switch (state) {
+            case WORLD_STATE_READY:
+                drawReady(g);
+                break;
             case WORLD_STATE_RUNNING:
                 world.gameRender(g);
                 drawHelp();

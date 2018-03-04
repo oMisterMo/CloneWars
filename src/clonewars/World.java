@@ -20,14 +20,17 @@ import common.Helper;
 import common.OverlapTester;
 import common.Vector2D;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 20-Feb-2018, 22:16:38.
@@ -38,12 +41,19 @@ public class World extends GameObject {
 
     public static final float WORLD_WIDTH = 600;
     public static final float WORLD_HEIGHT = 600;
-    private Color backgroundColor = Color.BLACK;
-//    private Color backgroundColor = Color.DARK_GRAY;
 
-    public static final float TIME_TO_SPAWN = 0.4f;       //spawn enemy
+    public static final float GUN_COOLDOWN = 0.064f;    //seconds
+    private static float elapsedGun = 0;
+
+    public static final float TIME_TO_SPAWN = 0.4f;     //spawn enemy
     public static final float DIST_AWAY = 100f;         //distance from screen
-    private float elapsedTime = 0;
+    public static final int NO_OF_WAVES = 5;
+    public static int currentWave = 0;  //0 means 1...duh
+    public static boolean waveComplete = false;
+    private static ListToSpawn[] waves;
+    private static int[] enemiesToKill;
+    private static int[] currentEnemiesAlive;
+    private static int[] spawnTracker;
 
     private SpatialHashGrid grid;
     private Player player;
@@ -51,56 +61,75 @@ public class World extends GameObject {
 
     private ParticleSystem death;
     private boolean cFire = false;          //Mouse held down?
-    private final Point touchPos = new Point();
+    private final Vector2D touchPos = new Vector2D();
 
-//    public static final int xShift = (int) (GamePanel.GAME_WIDTH / 2 - WORLD_WIDTH / 2);
-//    public static final int yShift = (int) (GamePanel.GAME_HEIGHT / 2 - WORLD_HEIGHT / 2);
-    public static final int xShift = 0;
+    private Color backgroundColor = Color.BLACK;
+    public static final int xShift = 0; //(int) (GamePanel.GAME_WIDTH / 2 - WORLD_WIDTH / 2)
     public static final int yShift = 0;
     private float scaleTime = 1f;
+    private float elapsedTime = 0;
 
     public World() {
         init();
-        spawnEnemy();
-        spawnEnemy();
+//        spawnEnemy();
+//        spawnEnemy();
         System.out.println("background Color: " + backgroundColor);
         System.out.println("World loaded...");
     }
 
     private void init() {
+        initWaves();
+        enemiesToKill = new int[Enemy.NO_OF_ENEMIES];
+        currentEnemiesAlive = new int[Enemy.NO_OF_ENEMIES];
+        spawnTracker = new int[Enemy.NO_OF_ENEMIES];
+
         player = new Player(
                 WORLD_WIDTH / 2 - Player.PLAYER_WIDTH / 2 + xShift,
                 WORLD_HEIGHT / 2 - Player.PLAYER_HEIGHT / 2 + yShift,
                 Player.PLAYER_WIDTH,
                 Player.PLAYER_HEIGHT);
         enemies = new ArrayList<>(50);
-//        Enemy typeA = new TypeA(350, 300, TypeA.TYPEA_WIDTH, TypeA.TYPEA_HEIGHT, player);
-//        typeA.velocity.set(Helper.Random(-100, 100), Helper.Random(-100, 100));
-//        enemies.add(typeA);
-//        enemies.add(
-//                new TypeA(350, 300, TypeA.TYPEA_WIDTH, TypeA.TYPEA_HEIGHT,
-//                        player,
-//                        Helper.Random(-100, 100),
-//                        Helper.Random(-100, 100))
-//        );
-//        enemies.add(
-//                new TypeA(350, 300, TypeA.TYPEA_WIDTH, TypeA.TYPEA_HEIGHT,
-//                        player,
-//                        Helper.Random(-100, 100),
-//                        Helper.Random(-100, 100))
-//        );
-//        enemies.add(
-//                new TypeA(350, 300, TypeA.TYPEA_WIDTH, TypeA.TYPEA_HEIGHT,
-//                        player,
-//                        Helper.Random(-100, 100),
-//                        Helper.Random(-100, 100))
-//        );
 
+        setEnemiesToKill();
+        printDebug();
         death = new ParticleSystem();
         initGrid();
         //-----------------------------END my random test
 //        backgroundColor = new Color(0, 0, 0);    //Represents colour of background
 //        backgroundColor = new Color(135,206,235);    //Represents colour of background
+    }
+
+    private void initWaves() {
+        /*
+         Trying to store the data type {id, {int, int][]}
+         could possible be done better using a text file
+         */
+        //Wave 1
+        waves = new ListToSpawn[NO_OF_WAVES];
+        waves[0] = new ListToSpawn(1);
+        waves[0].toSpawn[0] = new ToSpawn(Enemy.TYPEA, 10);
+
+        //Wave 2
+        waves[1] = new ListToSpawn(2);
+        waves[1].toSpawn[0] = new ToSpawn(Enemy.TYPEA, 3);
+        waves[1].toSpawn[1] = new ToSpawn(Enemy.TYPEB, 5);
+
+        //Wave 3
+        waves[2] = new ListToSpawn(3);
+        waves[2].toSpawn[0] = new ToSpawn(Enemy.TYPEA, 6);
+        waves[2].toSpawn[1] = new ToSpawn(Enemy.TYPEB, 30);
+        waves[2].toSpawn[2] = new ToSpawn(Enemy.TYPEC, 30);
+
+        //Wave 4
+        waves[3] = new ListToSpawn(2);
+        waves[3].toSpawn[0] = new ToSpawn(Enemy.TYPEC, 15);
+        waves[3].toSpawn[1] = new ToSpawn(Enemy.TYPEB, 5);
+
+        //Wave 5
+        waves[4] = new ListToSpawn(1);
+        waves[4].toSpawn[0] = new ToSpawn(Enemy.TYPEC, 100);
+
+        System.out.println("Initialised waves...");
     }
 
     private void initGrid() {
@@ -174,16 +203,40 @@ public class World extends GameObject {
     }
 
     private void continousFire() {
-        if (cFire) {
+        if (elapsedGun >= GUN_COOLDOWN) {
+            if (cFire) {
             //limit fire rate
 
-            //fire
-            player.fire(touchPos.x, touchPos.y);
+                //fire
+                player.fire(touchPos.x, touchPos.y);
+            }
+            elapsedGun = 0;
         }
     }
 
     private void reset() {
         System.out.println("RESET");
+    }
+
+    private void printDebug() {
+        for (int i = 0; i < Enemy.NO_OF_ENEMIES; i++) {
+            System.out.println("Type " + (i + 1)
+                    + " to be killed: " + enemiesToKill[i]);
+        }
+        for (int i = 0; i < Enemy.NO_OF_ENEMIES; i++) {
+            System.out.println("spawned type " + i + ": " + spawnTracker[i]);
+        }
+    }
+
+    private void killAllEnemies() {
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy dead = enemies.get(j);
+            death.playExplosion(dead.bounds.center);
+            dead.die();
+
+            //Enemy must get repawned so that we can kill it with fire!
+            spawnTracker[dead.getType()]--;
+        }
     }
 
     private void bulletCollision() {
@@ -199,12 +252,21 @@ public class World extends GameObject {
                 if (OverlapTester.overlapCircles(e.bounds, b.bounds)) {
                     //kill enemy (if alive)
                     if (e.getState() != Enemy.ENEMY_DEAD) {
+                        //Increament death counter of current enemy
+                        enemiesToKill[e.getType()]--;
 //                        System.out.println("hit");
                         death.playExplosion(e.bounds.center);
                         //play sound
 
                         //set enemy state
                         e.die();
+                        //check if level is complete
+                        waveComplete = isWaveComplete();
+
+                        /**
+                         * *Debugging only**
+                         */
+//                        printDebug();
                     }
                     //remove bullet (or keep for more power)
 //                    player.bullets.remove(b);
@@ -223,13 +285,7 @@ public class World extends GameObject {
             if (OverlapTester.overlapCircleRectangle(e.bounds, player.bounds)) {
 //                System.out.println("PLAYER HURT!");
                 player.lives -= 1;
-                System.out.println("player.lives = " + player.lives);
-                //kill all enemiees
-                for (int j = 0; j < enemies.size(); j++) {
-                    Enemy dead = enemies.get(j);
-                    death.playExplosion(dead.bounds.center);
-                    dead.die();
-                }
+                killAllEnemies();
                 //respawn player
             }
         }
@@ -271,10 +327,6 @@ public class World extends GameObject {
     }
 
     private void handleCollisions(float deltaTime) {
-//        //Wrap to world
-//        wrapPlayer();
-
-        /* Enemies collisions */
         //Bullet - Enemey 
         bulletCollision();
         //Player - Enemy
@@ -284,15 +336,71 @@ public class World extends GameObject {
     }
 
     private void checkGameover() {
-        if (player.lives < 0) {
+        if (player.lives <= 0) {
             //GameOver
-
+            GamePanel.state = GamePanel.WORLD_STATE_GAMEOVER;
         }
     }
 
+    /*FIX ME*/
+    private boolean isWaveComplete() {
+//        int a = enemiesKilled[Enemy.TYPEA];
+//        int b = enemiesKilled[Enemy.TYPEB];
+//        int c = enemiesKilled[Enemy.TYPEC];
+//        boolean b = false;
+
+        /*THIS METHOD WILL FAIL IF ENEMIES ORDER IS SWITCHED*/
+        int numEnemies = waves[currentWave].toSpawn.length;
+//        for (int i = 0; i < numEnemies; i++) {
+        for (int i = 0; i < Enemy.NO_OF_ENEMIES; i++) {
+            //No of enemies killed >= amount of enemies per wave
+//            System.out.println(waves[currentWave].toSpawn[i].getAmount());
+//            if (enemiesKilled[i] <= waves[currentWave].toSpawn[i].getAmount()) {
+//                return false;
+//            }
+            if (enemiesToKill[i] > 0) {
+                return false;
+            }
+        }
+        System.out.println("***LEVEL OVER***");
+        return true;
+    }
+
     private void spawnEnemy() {
-        System.out.println("SPAWNING");
-        //get point offscreen
+//        System.out.println("SPAWNING");
+        //get the amount of enemies on a wave
+        ListToSpawn curEnemyList = waves[currentWave];
+        int rangeEnemies = curEnemyList.toSpawn.length;
+
+        //spawn a random enemy on a given wave
+        ToSpawn typeToSpawn = curEnemyList.toSpawn[Helper.Random(0, rangeEnemies)];
+        /* ONLY SPAWN ENEMIES IF THEY ARE NOT PAST THE KILL COUNTER */
+        //list.toSpawn[0] == first enemy
+//        int[] curEn = new int[rangeEnemies];
+//        for(int i=0; i<rangeEnemies; i++){
+//            curEn[i] = curEnemyList.toSpawn[i].getType();
+//        }
+//        if(enemiesToKill[curEn[0]] < 20){
+//            
+//        }
+//        Set<Integer> test = new HashSet<>();
+//        ArrayList<Integer> test = new ArrayList<>();
+//        for(int i=0; i<enemiesToKill.length; i++){
+//            //enemiesToKill[Enemy.TYPEA] > 0
+//            if(enemiesToKill[i] > 0){
+//                test.add(i);
+//            }
+//        }
+
+        //Spawn
+        spawnType(typeToSpawn.getType());
+//        spawnType(test.get(0));
+//        spawnType(x, y, Helper.Random(0, Enemy.NO_OF_ENEMIES));
+        elapsedTime = 0;
+    }
+
+    private void spawnType(int type) {
+        //get random point offscreen
         float x, y;
         if (Helper.Random() > 0.5f) {
             //Spawn either Up or Down
@@ -305,16 +413,21 @@ public class World extends GameObject {
             x = (num < 0.5f) ? -DIST_AWAY : WORLD_WIDTH + DIST_AWAY;
             y = Helper.Random(0, WORLD_HEIGHT);
         }
-        spawnType(x, y, Helper.Random(0, Enemy.NO_OF_ENEMIES));
-//        enemies.add(
-////                new TypeA(x, y, TypeA.TYPEA_WIDTH, TypeA.TYPEA_HEIGHT,
-////                        player)
-////                new TypeC(x, y, TypeB.TYPEB_WIDTH, TypeB.TYPEB_HEIGHT,
-////                        player)
-//                new TypeC(x, y, TypeC.TYPEC_WIDTH, TypeC.TYPEC_HEIGHT,
-//                        player)
-//        );
-        elapsedTime = 0;
+//        System.out.println("type: "+type);
+        switch (type) {
+            case Enemy.TYPEA:
+                enemies.add(new TypeA(x, y,
+                        TypeA.TYPE_A_WIDTH, TypeA.TYPE_A_HEIGHT, player));
+                break;
+            case Enemy.TYPEB:
+                enemies.add(new TypeB(x, y,
+                        TypeB.TYPE_B_WIDTH, TypeB.TYPE_B_HEIGHT, player));
+                break;
+            case Enemy.TYPEC:
+                enemies.add(new TypeC(x, y,
+                        TypeC.TYPE_C_WIDTH, TypeC.TYPE_C_HEIGHT, player));
+                break;
+        }
     }
 
     private void spawnType(float x, float y, int type) {
@@ -322,23 +435,106 @@ public class World extends GameObject {
         switch (type) {
             case Enemy.TYPEA:
                 enemies.add(new TypeA(x, y,
-                        TypeA.TYPEA_WIDTH, TypeA.TYPEA_HEIGHT, player));
+                        TypeA.TYPE_A_WIDTH, TypeA.TYPE_A_HEIGHT, player));
                 break;
             case Enemy.TYPEB:
                 enemies.add(new TypeB(x, y,
-                        TypeB.TYPEB_WIDTH, TypeB.TYPEB_HEIGHT, player));
+                        TypeB.TYPE_B_WIDTH, TypeB.TYPE_B_HEIGHT, player));
                 break;
             case Enemy.TYPEC:
                 enemies.add(new TypeC(x, y,
-                        TypeC.TYPEC_WIDTH, TypeC.TYPEC_HEIGHT, player));
+                        TypeC.TYPE_C_WIDTH, TypeC.TYPE_C_HEIGHT, player));
                 break;
         }
     }
 
-    private void updateEnemies(float deltaTime) {
+    private void handleSpawn() {
+        //Spawn [The faster the spawn rate, the faster it gets called]
         if (elapsedTime >= TIME_TO_SPAWN) {
-            spawnEnemy();
+
+            int noOfEnemies = waves[currentWave].toSpawn.length;
+            ListToSpawn baddies = waves[currentWave];
+
+            /* change cuurentEnemiesAlive -> baddie.getType() */
+            for (int j = 0; j < noOfEnemies; j++) {
+                ToSpawn baddie = baddies.toSpawn[j];
+                currentEnemiesAlive[j] = baddie.getType();
+                //If the enemy type has can spawn
+                if (enemiesToKill[currentEnemiesAlive[j]] > 0) {
+//                    System.out.println("enemiesToKill[" + currentEnemiesAlive[j]
+//                            + "]: " + (enemiesToKill[currentEnemiesAlive[j]] > 0));
+                    //If there are < enemy.amount on screen
+                    if (spawnTracker[currentEnemiesAlive[j]]
+                            < baddie.getAmount()/*obj.getAmount*/) { //enemiesToKill[currentEnemiesAlive[j]]*/s
+                        spawnType(currentEnemiesAlive[j]);      //spawn enemy
+                        spawnTracker[currentEnemiesAlive[j]]++; //update enemies spawned
+                    }
+                }
+            }
+//            spawnEnemy();
+            elapsedTime = 0;
         }
+    }
+
+    private void handleCollisionHashgrid() {
+        List<StaticGameObject> colliders = grid.getPotentialColliders(player);
+        int len = colliders.size();
+//        System.out.println("potential coll: "+len);
+        for (int i = 0; i < len; i++) {
+            StaticGameObject collider = colliders.get(i);
+//            numOfCollision++;
+//            System.out.println(numOfCollision);
+
+            //If player bounds intersects any other static object within cell
+//            if (player.bounds.intersects(collider.bounds)) {
+//
+//            }
+        }
+    }
+
+    private void setEnemiesToKill() {
+        int noOfDiffEnemies = waves[currentWave].toSpawn.length;
+        System.out.println("NO OF ENENIES: " + noOfDiffEnemies);
+        for (int i = 0; i < noOfDiffEnemies; i++) {
+            ToSpawn enemy = waves[currentWave].toSpawn[i];
+//            enemiesToKill[i] = waves[currentWave].toSpawn[i].getAmount();
+            enemiesToKill[enemy.getType()] = enemy.getAmount();
+        }
+    }
+
+    private void resetSpawnTracker() {
+        int len = spawnTracker.length;
+        for (int i = 0; i < len; i++) {
+            spawnTracker[i] = 0;
+        }
+    }
+
+    public void loadNextWave() {
+        System.out.println("Loading next wave...");
+        waveComplete = false;
+//        int len = enemiesKilled.length;
+//        for (int i = 0; i < len; i++) {
+//            enemiesKilled[i] = 0;
+//        }
+        currentWave++;
+        setEnemiesToKill();
+        resetSpawnTracker();
+        printDebug();
+        System.out.println("current wave: " + currentWave);
+        elapsedTime = 0;    //Time since last enemy spawned
+        GamePanel.state = GamePanel.WORLD_STATE_READY;
+    }
+
+    private void checkWaveComplete() {
+        if (waveComplete) {
+            //Wait 2 seconds
+
+            //load next wave
+            loadNextWave();
+        }
+    }
+
+    private void updateEnemies(float deltaTime) {
         int len = enemies.size() - 1;
         for (int i = len; i >= 0; i--) {
             Enemy e = enemies.get(i);
@@ -360,19 +556,19 @@ public class World extends GameObject {
         }
     }
 
-    private void handleCollisionHashgrid() {
-        List<StaticGameObject> colliders = grid.getPotentialColliders(player);
-        int len = colliders.size();
-//        System.out.println("potential coll: "+len);
+    private void drawDeadInfo(Graphics2D g) {
+        int len = enemiesToKill.length;
         for (int i = 0; i < len; i++) {
-            StaticGameObject collider = colliders.get(i);
-//            numOfCollision++;
-//            System.out.println(numOfCollision);
+            g.drawString("Type " + (i + 1) + ": " + enemiesToKill[i],
+                    WORLD_WIDTH - 140, 70 + (i * 30));
+        }
+    }
 
-            //If player bounds intersects any other static object within cell
-//            if (player.bounds.intersects(collider.bounds)) {
-//
-//            }
+    private void drawSpawnInfo(Graphics2D g) {
+        int len = enemiesToKill.length;
+        for (int i = 0; i < len; i++) {
+            g.drawString("Type " + (i + 1) + ": " + spawnTracker[i],
+                    WORLD_WIDTH - 140, 270 + (i * 30));
         }
     }
 
@@ -380,10 +576,13 @@ public class World extends GameObject {
     void gameUpdate(float deltaTime) {
         //********** Do updates HERE **********
         elapsedTime += deltaTime;
+        elapsedGun += deltaTime;
         deltaTime *= scaleTime; //Objects that are slow mo after this line
-        continousFire();
 
+        checkWaveComplete();
+        continousFire();
         player.gameUpdate(deltaTime);
+        handleSpawn();
         updateEnemies(deltaTime);
         death.gameUpdate(deltaTime);
 
@@ -399,14 +598,21 @@ public class World extends GameObject {
         g.setColor(backgroundColor);
         g.fillRect(0 + xShift, 0 + yShift, (int) WORLD_WIDTH, (int) WORLD_HEIGHT);
 
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        if (waveComplete) {
+            System.out.println("SETTING BIG FONT");
+            g.setFont(new Font("Courier new", Font.PLAIN, 85));
+            return;
+        }
         //********** Do drawings HERE **********
         player.gameRender(g);
         drawEnemies(g);
         death.gameRender(g);
         //Draw Debuggin info above other objects
 //        drawHashGrid(g);
+        g.setColor(Color.WHITE);
+        g.drawString("Lives: " + player.lives, WORLD_WIDTH - 140, 30);
+        drawDeadInfo(g);
+        drawSpawnInfo(g);
     }
 
     private void drawHashGrid(Graphics2D g) {

@@ -26,8 +26,8 @@ import java.awt.Graphics2D;
  */
 public class TypeA extends Enemy {
 
-    public static final float TYPEA_WIDTH = 25;
-    public static final float TYPEA_HEIGHT = 25;
+    public static final float TYPE_A_WIDTH = 25;
+    public static final float TYPE_A_HEIGHT = 25;
     private float speed;
 
     public TypeA(float x, float y, float width, float height, Player player) {
@@ -83,11 +83,16 @@ public class TypeA extends Enemy {
         return stateTime;
     }
 
+    @Override
+    public int getType() {
+        return Enemy.TYPEA;
+    }
+
     public boolean enemyOutOfBounds() {
         return (position.x < 0
-                || position.x + TYPEA_WIDTH > World.WORLD_WIDTH
+                || position.x + TYPE_A_WIDTH > World.WORLD_WIDTH
                 || position.y < 0
-                || position.y + TYPEA_HEIGHT > World.WORLD_HEIGHT);
+                || position.y + TYPE_A_HEIGHT > World.WORLD_HEIGHT);
     }
 
     @Override
@@ -120,16 +125,16 @@ public class TypeA extends Enemy {
 //        }
         g.setColor(Color.RED);
 //        g.drawRect((int) position.x, (int) position.y,      //rect
-//                (int) TYPEA_WIDTH, (int) TYPEA_HEIGHT);
+//                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
         g.drawRect((int) bounds.center.x, (int) bounds.center.y, 1, 1);   //dot
         g.drawOval((int) (bounds.center.x - bounds.radius),
                 (int) (bounds.center.y - bounds.radius),
-                (int) TYPEA_WIDTH, (int) TYPEA_HEIGHT);
+                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
 
 //        g.setColor(Color.WHITE);
 //        g.drawOval((int) (position.x), //circle
 //                (int) (position.y),
-//                (int) TYPEA_WIDTH, (int) TYPEA_HEIGHT);
+//                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
     }
 
 }
