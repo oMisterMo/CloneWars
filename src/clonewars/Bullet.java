@@ -24,7 +24,7 @@ import java.awt.Graphics2D;
 /**
  * 21-Feb-2018, 20:21:51.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class Bullet extends DynamicGameObject {
 
@@ -38,9 +38,9 @@ public class Bullet extends DynamicGameObject {
     public static final float MAX_SPEED = 1000f;
     private float deacceleration = 0;
 
-    public Bullet(float x, float y, float width, float height) {
-        super(x, y, width, height);
-        float radius = width / 2;   //had radius = width = 2 (:|)
+    public Bullet(float x, float y) {
+        super(x, y, BULLET_WIDTH, BULLET_HEIGHT);
+        float radius = BULLET_WIDTH / 2;   //had radius = width = 2 (:|)
         bounds = new Circle(x + radius, y + radius, radius);
 //        //Direction and angle
 //        this.velocity.set(vel);

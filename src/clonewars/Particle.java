@@ -12,7 +12,7 @@ import java.awt.geom.AffineTransform;
 /**
  * 26-Jul-2016, 01:12:17.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class Particle extends DynamicGameObject {
 
@@ -21,7 +21,7 @@ public class Particle extends DynamicGameObject {
     //Particles lifespan in ms
     protected float age;
 
-    //Range between 0.0 - 1.0 (ressistanse on x axis)
+    //Range between 0.0 - 1.0 (resistance on x axis)
     protected float dampening;
     //Rotation variables
     protected float rotation;
@@ -130,7 +130,7 @@ public class Particle extends DynamicGameObject {
          vel (m/s) gravitiy (m/s), deltaTime in seconds(s), position(m)
          Everysecond we update the velocity
          */
-        velocity.multBy(dampening);
+        velocity.mult(dampening);
 
         //Update velocities position by applying gravity (change in vel = accel)
         velocity.x += acceleration.x * deltaTime;
@@ -141,8 +141,8 @@ public class Particle extends DynamicGameObject {
         position.x += velocity.x * deltaTime;
         position.y += velocity.y * deltaTime;
         //Update collision bounds
-        bounds.lowerLeft.x = position.x;
-        bounds.lowerLeft.y = position.y;
+        bounds.topLeft.x = position.x;
+        bounds.topLeft.y = position.y;
     }
 
     private void updateRot(float deltaTime) {
@@ -202,7 +202,7 @@ public class Particle extends DynamicGameObject {
     }
 
     @Override
-    void gameUpdate(float deltaTime) {
+    public void gameUpdate(float deltaTime) {
         //dt = 0.016 (60fps) dt = 0.032 (30fps)
 //        System.out.println("deltaTime: "+deltaTime);
         age -= deltaTime;  //in ms
@@ -221,7 +221,7 @@ public class Particle extends DynamicGameObject {
     }
 
     @Override
-    void gameRender(Graphics2D g) {
+    public void gameRender(Graphics2D g) {
         if (age < 0) {
             age = 0;
             return;
@@ -232,8 +232,8 @@ public class Particle extends DynamicGameObject {
          g.translate(x, y);
          */
         g.setColor(color);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+//        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
         scaleRotateDraw(g);
     }

@@ -8,7 +8,7 @@ import common.Rectangle;
 /**
  * 05-Feb-2017, 18:54:47.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class StaticGameObject extends GameObject {
 
@@ -40,11 +40,11 @@ public class StaticGameObject extends GameObject {
 //    }
 
     @Override
-    void gameUpdate(float deltaTime) {
+    public void gameUpdate(float deltaTime) {
     }
 
     @Override
-    void gameRender(Graphics2D g) {
+    public void gameRender(Graphics2D g) {
     }
 
 }

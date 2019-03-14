@@ -20,7 +20,7 @@ package clonewars;
 /**
  * 02-Mar-2018, 16:07:33.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class ListToSpawn {
     public ToSpawn[] toSpawn;

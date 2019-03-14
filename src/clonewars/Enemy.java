@@ -21,7 +21,7 @@ import common.Circle;
 /**
  * 22-Feb-2018, 14:37:55.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 abstract class Enemy extends DynamicGameObject {
 
@@ -41,7 +41,7 @@ abstract class Enemy extends DynamicGameObject {
     public float stateTime; //how long enemy has been in a state
 
     //Player to chase
-    protected Player player;
+    protected Player player;    //reference to the player
     protected Circle bounds;    //field hides gameObjects rectangles
 
     public Enemy(float x, float y, float width, float height, Player player) {

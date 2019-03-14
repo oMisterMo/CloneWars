@@ -23,7 +23,7 @@ import java.awt.Graphics2D;
 /**
  * 28-Feb-2018, 21:33:04.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class TypeB extends Enemy {
 
@@ -32,8 +32,8 @@ public class TypeB extends Enemy {
 
     private float speed;
 
-    public TypeB(float x, float y, float width, float height, Player player) {
-        super(x, y, width, height, player);
+    public TypeB(float x, float y, Player player) {
+        super(x, y, TYPE_B_WIDTH, TYPE_B_HEIGHT, player);
         stateTime = 0;
         speed = 50;
 
@@ -133,29 +133,33 @@ public class TypeB extends Enemy {
     private void wrapTypeB() {
 //        System.out.println(player.position);
         //Wrap from left
-        if (position.x - bounds.radius < 0 + World.xShift) {
-            position.x = World.WORLD_WIDTH - bounds.radius + World.xShift;
-            bounds.center.x = World.WORLD_WIDTH + World.xShift;
+        if (position.x + TYPE_B_WIDTH / 2 < 0 + World.xShift) {
+            position.x = World.WORLD_WIDTH - TYPE_B_WIDTH / 2 + World.xShift;
+//            bounds.center.x = World.WORLD_WIDTH + World.xShift;
+            bounds.center.x = position.x + TYPE_B_WIDTH / 2;
         }
         //Wrap from right
-        if (position.x + bounds.radius > World.WORLD_WIDTH + World.xShift) {
-            position.x = bounds.radius + World.xShift;
-            bounds.center.x = bounds.radius + World.xShift;
+        if (position.x + TYPE_B_WIDTH / 2 > World.WORLD_WIDTH + World.xShift) {
+            position.x = (-TYPE_B_WIDTH / 2) + World.xShift;
+//            bounds.center.x = bounds.radius + World.xShift;
+            bounds.center.x = position.x + TYPE_B_WIDTH / 2;
         }
         //Wrap from top
-        if (position.y - bounds.radius < 0 + World.yShift) {
-            position.y = World.WORLD_HEIGHT - bounds.radius + World.yShift;
-            bounds.center.y = World.WORLD_HEIGHT + World.yShift;
+        if (position.y + TYPE_B_HEIGHT / 2 < 0 + World.yShift) {
+            position.y = World.WORLD_HEIGHT - TYPE_B_WIDTH / 2 + World.yShift;
+//            bounds.center.y = World.WORLD_HEIGHT + World.yShift;
+            bounds.center.y = position.y + TYPE_B_HEIGHT / 2;
         }
         //Wrap from bottom
-        if (position.y + bounds.radius > World.WORLD_HEIGHT + World.yShift) {
-            position.y = bounds.radius + World.yShift;
-            bounds.center.y = bounds.radius + World.yShift;
+        if (position.y + TYPE_B_HEIGHT / 2 > World.WORLD_HEIGHT + World.yShift) {
+            position.y = (-TYPE_B_HEIGHT / 2) + World.yShift;
+//            bounds.center.y = bounds.radius + World.yShift;
+            bounds.center.y = position.y + TYPE_B_HEIGHT / 2;
         }
     }
 
     @Override
-    void gameUpdate(float deltaTime) {
+    public void gameUpdate(float deltaTime) {
 //        super.gameUpdate(deltaTime);    //moves enemy
         //Update enemies position
         position.add(velocity.x * deltaTime, velocity.y * deltaTime);
@@ -173,7 +177,8 @@ public class TypeB extends Enemy {
                 //Update enemies position
 //                position.add(velocity.x * deltaTime, velocity.y * deltaTime);
 //                bounds.center.add(velocity.x * deltaTime, velocity.y * deltaTime);
-                wrapTYPEBold();
+//                wrapTYPEBold();
+                wrapTypeB();
                 break;
             case ENEMY_IDLE:
                 break;
@@ -185,14 +190,18 @@ public class TypeB extends Enemy {
     }
 
     @Override
-    void gameRender(Graphics2D g) {
-        g.setColor(Color.YELLOW);
-//        g.drawRect((int) position.x, (int) position.y,      //rect
+    public void gameRender(Graphics2D g) {
+        g.drawImage(Assets.skull3, (int) position.x, (int) position.y,
+                (int) TYPE_B_WIDTH, (int) TYPE_B_HEIGHT, null);
+
+//        //draw bounds
+//        g.setColor(Color.YELLOW);
+////        g.drawRect((int) position.x, (int) position.y,      //rect
+////                (int) TYPE_B_WIDTH, (int) TYPE_B_HEIGHT);
+//        g.drawRect((int) bounds.center.x,
+//                (int) bounds.center.y, 1, 1);               //dot
+//        g.drawOval((int) (bounds.center.x - bounds.radius), //circle
+//                (int) (bounds.center.y - bounds.radius),
 //                (int) TYPE_B_WIDTH, (int) TYPE_B_HEIGHT);
-        g.drawRect((int) bounds.center.x,
-                (int) bounds.center.y, 1, 1);               //dot
-        g.drawOval((int) (bounds.center.x - bounds.radius), //circle
-                (int) (bounds.center.y - bounds.radius),
-                (int) TYPE_B_WIDTH, (int) TYPE_B_HEIGHT);
     }
 }

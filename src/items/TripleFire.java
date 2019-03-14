@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package clonewars;
+package items;
 
 /**
- * 20-Feb-2018, 22:13:36.
+ * 01-May-2018, 01:18:31.
  *
  * @author Mohammed Ibrahim
  */
-public class test {
+public class TripleFire {
 
 }

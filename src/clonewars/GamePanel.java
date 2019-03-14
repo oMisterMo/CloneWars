@@ -16,7 +16,9 @@
  */
 package clonewars;
 
+import clonewars.World.WorldListener;
 import common.Tween;
+import common.Vector2D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -34,18 +36,18 @@ import javax.swing.JPanel;
 /**
  * 20-Feb-2018, 22:07:09.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class GamePanel extends JPanel implements Runnable {
 
     public static final int GAME_WIDTH = 600;
     public static final int GAME_HEIGHT = 600;
     //Game States
-    public static final int WORLD_STATE_READY = 0;
-    public static final int WORLD_STATE_RUNNING = 1;
-    public static final int WORLD_STATE_GAMEOVER = 2;
-    public static int state = WORLD_STATE_READY;
-//    public int state = WORLD_STATE_RUNNING;
+    public static final int GAME_READY = 0;
+    public static final int GAME_RUNNING = 1;
+    public static final int GAME_GAMEOVER = 2;
+//    public static int state = GAME_READY;
+    public static int state = GAME_RUNNING;
 
     private boolean running = false;
     private Thread thread;
@@ -58,7 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
     private long averageFPS;
 
     //Ready Screen
-    public static final float TWEEN_TIME = 1.5f;
+    public static final float TWEEN_TIME = 1.5f;    //In seconds
+    private float tweenElapsedTime = 0;             //In seconds
     private final String wave = "WAVE ";
     private float waveX, waveY;
     float x1 = GAME_WIDTH / 2 - 150;
@@ -66,7 +69,10 @@ public class GamePanel extends JPanel implements Runnable {
     float y;
 
     private final World world;
-    private float elapsedTime = 0;
+    private final WorldListener worldListener;
+//    private final Joystick leftJoy;
+
+    private Font smallFont, largeFont;
 
     public GamePanel() {
         super();
@@ -78,10 +84,47 @@ public class GamePanel extends JPanel implements Runnable {
         initInput();
         Assets.loadImages();
 
-        waveX = GAME_WIDTH / 2 - 150;
-        waveY = -100;
-        y = GAME_HEIGHT + 100;
-        world = new World();
+        setReadyPositions();
+        worldListener = new WorldListener() {
+            @Override
+            public void fire() {
+            }
+
+            @Override
+            public void enemySpawn() {
+            }
+
+            @Override
+            public void enemyDie() {
+            }
+
+            @Override
+            public void playerSpawn() {
+            }
+
+            @Override
+            public void playerHurt() {
+            }
+
+            @Override
+            public void playerDie() {
+            }
+
+            @Override
+            public void loadNextWave() {
+            }
+
+            @Override
+            public void sayPraise() {
+//                Assets.sayPraise.play(1);
+            }
+
+        };
+        world = new World(worldListener);
+//        leftJoy = new Joystick(80, 350);
+
+        smallFont = new Font("Courier new", Font.PLAIN, 20);
+        largeFont = new Font("Courier new", Font.PLAIN, 85);
     }
 
     private void initInput() {
@@ -91,6 +134,12 @@ public class GamePanel extends JPanel implements Runnable {
         MAdapter lis = new GamePanel.MAdapter();
         addMouseListener(lis);
         addMouseMotionListener(lis);
+    }
+
+    private void setReadyPositions() {
+        waveX = GAME_WIDTH / 2 - 150;
+        waveY = -100;
+        y = GAME_HEIGHT + 100;
     }
 
     //METHODS
@@ -120,7 +169,7 @@ public class GamePanel extends JPanel implements Runnable {
         image = new BufferedImage(GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
         //Set correct font & size
-        g.setFont(new Font("Courier new", Font.PLAIN, 85));
+        g.setFont(largeFont);
         //Enable antialiasing
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -171,32 +220,32 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void handleInput() {
         switch (state) {
-            case WORLD_STATE_RUNNING:
+            case GAME_RUNNING:
                 world.handleKeyEvents();
                 break;
-            case WORLD_STATE_GAMEOVER:
+            case GAME_GAMEOVER:
 
                 break;
         }
     }
 
     private void updateReady(float deltaTime) {
-        elapsedTime += deltaTime;
+        tweenElapsedTime += deltaTime;
         //Tween title
-        if (elapsedTime < TWEEN_TIME) {
-            waveY = (float) Tween.easeOutQuad(elapsedTime, -100, (400), TWEEN_TIME);
-            y = (float) Tween.easeOutQuad(elapsedTime,
+        if (tweenElapsedTime < TWEEN_TIME) {
+            waveY = (float) Tween.easeOutQuad(tweenElapsedTime, -100, (400), TWEEN_TIME);
+            y = (float) Tween.easeOutQuad(tweenElapsedTime,
                     610, -300, TWEEN_TIME);
         }
         //Set game to running
-        if (elapsedTime >= 5) {
-            state = WORLD_STATE_RUNNING;
-            //Don't forget to set small font again
-            g.setFont(new Font("Courier new", Font.PLAIN, 20));
+        if (tweenElapsedTime >= 5) {
+            state = GAME_RUNNING;
+//            //Don't forget to set small font again
+//            g.setFont(smallFont);
             //reset variables
             waveY = -100;
             y = GAME_HEIGHT + 100;
-            elapsedTime = 0;
+            tweenElapsedTime = 0;
         }
     }
 
@@ -209,14 +258,24 @@ public class GamePanel extends JPanel implements Runnable {
     /* ********************* UPDATE & RENDER ************************* */
     private void gameUpdate(float deltaTime) {
         switch (state) {
-            case WORLD_STATE_READY:
+            case GAME_READY:
                 updateReady(deltaTime);
                 break;
-            case WORLD_STATE_RUNNING:
+            case GAME_RUNNING:
                 world.gameUpdate(deltaTime);
+//                if(world.state == World.WORLD_STATE_READY){
+//                    state = GAME_READY;
+//                }
+//                if(world.state == World.WORLD_STATE_GAME_OVER){
+//                    state = GAME_GAMEOVER;
+//                }
+                //Set player pos based on joystick
+//                leftJoy.gameUpdate(deltaTime);
+//                Vector2D pos = leftJoy.getInputVec();
+//                world.player.velocity
+//                        .set(pos.x * Player.X_VEL, pos.y * Player.Y_VEL);
                 break;
-            case WORLD_STATE_GAMEOVER:
-
+            case GAME_GAMEOVER:
                 break;
         }
     }
@@ -227,16 +286,21 @@ public class GamePanel extends JPanel implements Runnable {
         g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
         switch (state) {
-            case WORLD_STATE_READY:
+            case GAME_READY:
+                g.setFont(largeFont);
                 drawReady(g);
                 break;
-            case WORLD_STATE_RUNNING:
+            case GAME_RUNNING:
+                g.setFont(smallFont);
                 world.gameRender(g);
                 drawHelp();
+                
+//                leftJoy.gameRender(g);
                 break;
-            case WORLD_STATE_GAMEOVER:
+            case GAME_GAMEOVER:
+                g.setFont(largeFont);
                 g.setColor(Color.WHITE);
-                g.drawString("GAMEOVER", GAME_WIDTH / 2 - 50, GAME_HEIGHT / 2 - 20);
+                g.drawString("GAMEOVER", GAME_WIDTH / 2 - 200, GAME_HEIGHT / 2 - 20);
                 break;
         }
     }
@@ -290,12 +354,14 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void mousePressed(MouseEvent e) {
 //            System.out.println("PRESSED");
+//            leftJoy.handleMousePressed(e);
             world.handleMousePressed(e);
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
 //            System.out.println("RELEASED");
+//            leftJoy.handleMouseReleased(e);
             world.handleMouseReleased(e);
         }
 
@@ -314,6 +380,7 @@ public class GamePanel extends JPanel implements Runnable {
         public void mouseDragged(MouseEvent e) {
 //            System.out.println("DRAGGED");
             //Clicked and held
+//            leftJoy.handleMouseDragged(e);
             world.handleMouseDragged(e);
         }
 
@@ -321,7 +388,7 @@ public class GamePanel extends JPanel implements Runnable {
         public void mouseMoved(MouseEvent e) {
 //            System.out.println("MOVED");
             //All movement
-//            world.handleMouseMoved(e);
+            world.handleMouseMoved(e);
         }
 
     }

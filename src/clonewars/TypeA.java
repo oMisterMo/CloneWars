@@ -22,7 +22,7 @@ import java.awt.Graphics2D;
 /**
  * 22-Feb-2018, 14:39:40.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class TypeA extends Enemy {
 
@@ -30,11 +30,11 @@ public class TypeA extends Enemy {
     public static final float TYPE_A_HEIGHT = 25;
     private float speed;
 
-    public TypeA(float x, float y, float width, float height, Player player) {
-        super(x, y, width, height, player);
+    public TypeA(float x, float y, Player player) {
+        super(x, y, TYPE_A_WIDTH, TYPE_A_HEIGHT, player);
         stateTime = 0;
         speed = 100;
-        
+
         //initial vel = towards player
         float xx = player.position.x - position.x;
         float yy = player.position.y - position.y;
@@ -117,20 +117,18 @@ public class TypeA extends Enemy {
 
     @Override
     public void gameRender(Graphics2D g) {
-        //Call super if enemy class draws something
-//        if (state == ENEMY_DEAD) {
-////            System.out.println("setting yellow");
-//            g.setColor(Color.YELLOW);
-//        } else {
-//        }
-        g.setColor(Color.RED);
+        g.drawImage(Assets.skull2, (int) position.x, (int) position.y,
+                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT, null);
+
+        //draw position
+//        g.setColor(Color.RED);
 //        g.drawRect((int) position.x, (int) position.y,      //rect
 //                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
-        g.drawRect((int) bounds.center.x, (int) bounds.center.y, 1, 1);   //dot
-        g.drawOval((int) (bounds.center.x - bounds.radius),
-                (int) (bounds.center.y - bounds.radius),
-                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
-
+//        g.drawRect((int) bounds.center.x, (int) bounds.center.y, 1, 1);   //dot
+//        g.drawOval((int) (bounds.center.x - bounds.radius),
+//                (int) (bounds.center.y - bounds.radius),
+//                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
+        //draw bounds (test)
 //        g.setColor(Color.WHITE);
 //        g.drawOval((int) (position.x), //circle
 //                (int) (position.y),

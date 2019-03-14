@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * 16-Dec-2016, 15:46:00.
  *
- * @author Mo
+ * @author Mohammed Ibrahim
  */
 public class ParticleSystem extends GameObject {
 

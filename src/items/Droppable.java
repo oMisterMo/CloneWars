@@ -14,14 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package items;
 
-package clonewars;
+import clonewars.StaticGameObject;
+import java.awt.Graphics2D;
 
 /**
- * 20-Feb-2018, 22:13:36.
+ * 29-Apr-2018, 18:00:53.
  *
  * @author Mohammed Ibrahim
  */
-public class test {
+public abstract class Droppable extends StaticGameObject {
 
+    public static final int LIFE = 0;
+    public static final int SHEILD = 1;
+    public static int type = -1;
+
+    public Droppable(float x, float y, float width, float height) {
+        super(x, y, width, height);
+    }
+
+    public int getType() {
+        //Overriden, doesn't get called
+        System.out.println("Should not get called");
+        return -1;
+    }
+
+    @Override
+    public void gameUpdate(float deltaTime) {
+    }
+
+    @Override
+    public void gameRender(Graphics2D g) {
+    }
 }
