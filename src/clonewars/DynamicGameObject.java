@@ -19,22 +19,30 @@ package clonewars;
 import common.Vector2D;
 
 /**
- * An abstract class may have static fields and static methods.
+ * A DynamicGameObject moves across the screen by applying a force to its
+ * position.
  *
- * 02-Feb-2017, 21:39:38.
- *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class DynamicGameObject extends StaticGameObject {
 
-    //Add other members
     protected Vector2D acceleration;
     protected Vector2D velocity;
+    protected boolean grounded = false;
 
+    /**
+     * Constructs a new dynamic object at the x,y location given.
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param width the width of the object
+     * @param height the height of the object
+     */
     public DynamicGameObject(float x, float y, float width, float height) {
         super(x, y, width, height);
         acceleration = new Vector2D();
         velocity = new Vector2D();
     }
-    
+
 }

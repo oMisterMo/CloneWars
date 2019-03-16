@@ -14,13 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package clonewars;
+package common;
 
 /**
- * 20-Feb-2018, 22:13:36.
+ * The Circle class specifies the 2d coordinates used to represent the center
+ * of the circle and a radius.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
-public class test {
+public class Circle {
 
+    public final Vector2D center = new Vector2D();
+    public float radius;
+
+    public Circle(float x, float y, float radius) {
+        this.center.set(x, y);
+        this.radius = radius;
+    }
 }

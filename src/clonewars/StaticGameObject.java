@@ -16,51 +16,44 @@
  */
 package clonewars;
 
-import java.awt.Graphics2D;
 import common.Vector2D;
+import java.awt.Graphics2D;
 //import java.awt.Rectangle;
 import common.Rectangle;
 
 /**
- * 05-Feb-2017, 18:54:47.
+ * The class represents static game objects which does not move once created.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class StaticGameObject extends GameObject {
 
     protected Vector2D position;
-//    protected Vector2D center;
 //    protected Rectangle.Float bounds;
     protected Rectangle bounds;
 
     /**
-     * Should initialise here and not in subclass
+     * Constructs a new object at the given location
      *
-     * @param x x position
-     * @param y y position
-     * @param width width
-     * @param height height
+     * The x, y location represent the top left hand corner of the object
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param width the width of the object
+     * @param height the height of the object
      */
     public StaticGameObject(float x, float y, float width, float height) {
         this.position = new Vector2D(x, y);
         this.bounds = new Rectangle(x, y, width, height);
-//        this.bounds = new Rectangle.Float(x, y, width, height);
-//        this.center = new Vector2D(position.x + width / 2, position.y + height / 2);
-//        System.out.println("WIDTH: "+width);
-    }
-
-//    public void updateCenter() {
-////        System.out.println("updating center");
-//        center.x = position.x + bounds.width / 2f;
-//        center.y = position.y + bounds.height / 2f;
-//    }
-
-    @Override
-    public void gameUpdate(float deltaTime) {
     }
 
     @Override
-    public void gameRender(Graphics2D g) {
+    void gameUpdate(float deltaTime) {
+    }
+
+    @Override
+    void gameRender(Graphics2D g) {
     }
 
 }

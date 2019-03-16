@@ -24,12 +24,8 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 /**
- * Represents a player within our game world
  *
- * 32 pixels = 1 meter
- *
- * 07-Sep-2016, 01:56:02.
- *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Player extends DynamicGameObject {

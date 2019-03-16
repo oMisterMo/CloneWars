@@ -17,8 +17,8 @@
 package clonewars;
 
 /**
- * 02-Mar-2018, 15:58:56.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class ToSpawn {

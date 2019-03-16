@@ -16,9 +16,6 @@
  */
 package clonewars;
 
-import clonewars.World.WorldListener;
-import common.Tween;
-import common.Vector2D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -33,9 +30,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
+import common.Tween;
+import common.Vector2D;
+import clonewars.World.WorldListener;
 /**
- * 20-Feb-2018, 22:07:09.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class GamePanel extends JPanel implements Runnable {
@@ -46,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int GAME_READY = 0;
     public static final int GAME_RUNNING = 1;
     public static final int GAME_GAMEOVER = 2;
-//    public static int state = GAME_READY;
-    public static int state = GAME_RUNNING;
+    public static int state = GAME_READY;
+//    public static int state = GAME_RUNNING;
 
     private boolean running = false;
     private Thread thread;
@@ -76,13 +76,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         super();
-        setPreferredSize(new Dimension(GAME_WIDTH - 10, GAME_HEIGHT - 10));
+        setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
         setFocusable(true);
         //System.out.println(requestFocusInWindow());
         requestFocus(); //-> platform dependant
 
         initInput();
-        Assets.loadImages();
 
         setReadyPositions();
         worldListener = new WorldListener() {
@@ -142,10 +141,6 @@ public class GamePanel extends JPanel implements Runnable {
         y = GAME_HEIGHT + 100;
     }
 
-    //METHODS
-    /**
-     * Is called after the JPanel has been added to the JFrame component.
-     */
     @Override
     public void addNotify() {
         super.addNotify();
@@ -157,13 +152,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        long startTime;
+        long startTime = System.nanoTime();
+        float deltaTime;
         long timeTaken;
         long frameCount = 0;
         long totalTime = 0;
         long waitTime;
         long targetTime = 1000 / FPS;
-        int counter = 0;    //can delete, counts negative waitTime
 
         running = true;
         image = new BufferedImage(GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -173,49 +168,49 @@ public class GamePanel extends JPanel implements Runnable {
         //Enable antialiasing
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
+        
         //GAME LOOP
         while (running) {
+            //Calculate time since last frame
+            deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0f; //ns -> sec
             startTime = System.nanoTime();
 
+            //Handle input, update and render
             handleInput();
-            gameUpdate(1f / FPS);
+            gameUpdate(deltaTime);
             Input.updateLastKey();
             gameRender(g);
             gameDraw();
 
             //How long it took to run
-            timeTaken = (System.nanoTime() - startTime) / 1000000;
-            //              16ms - targetTime
+            timeTaken = (System.nanoTime() - startTime) / 1_000_000;    //ns -> milli
+            //16ms - timeTaken
             waitTime = targetTime - timeTaken;
-
-            //System.out.println(timeTaken);
-            if (waitTime < 0) {
-                //I get a negative value at the beg
-                System.out.println(counter++ + ": NEGATIVE: " + waitTime);
-                System.out.println("targetTime = " + targetTime);
-                System.out.println("timeTaken = " + timeTaken + "\n");
-            }
-
             try {
                 //System.out.println("Sleeping for: " + waitTime);
-                //thread.sleep(waitTime);
-                Thread.sleep(waitTime);
-            } catch (Exception ex) {
+                thread.sleep(waitTime);
+            } catch (Exception e) {
 
             }
             totalTime += System.nanoTime() - startTime;
             frameCount++;
 
-            //If the current frame == 60  we calculate the average frame count
+            /*Debug*/
+            //Calculate average fps
             if (frameCount >= FPS) {
-                averageFPS = 1000 / ((totalTime / frameCount) / 1000000);
+                averageFPS = 1000 / ((totalTime / frameCount) / 1000_000);
                 frameCount = 0;
                 totalTime = 0;
                 //System.out.println("Average fps: " + averageFPS);
             }
+            //Print negative wait time
+            if (waitTime < 0) {
+                //I get a negative value at the beg
+                System.out.println("NEGATIVE: " + waitTime);
+                System.out.println("targetTime = " + targetTime);
+                System.out.println("timeTaken = " + timeTaken + "\n");
+            }
         }
-
     }
 
     private void handleInput() {
@@ -294,7 +289,7 @@ public class GamePanel extends JPanel implements Runnable {
                 g.setFont(smallFont);
                 world.gameRender(g);
                 drawHelp();
-                
+
 //                leftJoy.gameRender(g);
                 break;
             case GAME_GAMEOVER:

@@ -32,8 +32,8 @@ import items.Shield;
 import items.Splat;
 
 /**
- * 20-Feb-2018, 22:16:38.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class World extends GameObject {

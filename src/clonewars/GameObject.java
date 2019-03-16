@@ -21,12 +21,7 @@ import java.awt.Graphics2D;
 /**
  * Represents any object which is drawn to the screen.
  *
- * Possible subclasses: -> Tile -> Particle -> Player -> Square
- *
- * ALT + SHIFT + F = auto re-factor
- *
- * 16/05/16
- *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public abstract class GameObject {
@@ -39,7 +34,7 @@ public abstract class GameObject {
     abstract void gameUpdate(float deltaTime);
 
     /**
-     * Draws the screen
+     * Given a graphics context, would render basic shape/text/images
      *
      * @param g graphics object
      */

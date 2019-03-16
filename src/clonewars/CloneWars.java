@@ -16,34 +16,44 @@
  */
 package clonewars;
 
-import java.awt.Cursor;
+import java.io.IOException;
 import javax.swing.JFrame;
 
 /**
- * Main Class
  *
- * 20-Feb-2018, 21:44:26.
- *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class CloneWars {
+
+    private static Assets assets;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        try {
+            loadImages();
+            createAndShowGUI();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void loadImages() throws IOException {
+        assets = new Assets();
+    }
+
+    private static void createAndShowGUI() {
         JFrame window = new JFrame("Clone Wars");
         GamePanel game = new GamePanel();
-        
+
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        window.setResizable(false);
         window.add(game);
         window.pack();
-//        window.setLocation(70, 50);
         window.setLocationRelativeTo(null);
-        window.setResizable(false);
         window.setVisible(true);
-
         window.setAlwaysOnTop(true);
     }
 

@@ -17,8 +17,8 @@
 package items;
 
 /**
- * 01-May-2018, 01:18:31.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class TripleFire {

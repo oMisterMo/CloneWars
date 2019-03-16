@@ -22,8 +22,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * 21-Feb-2018, 20:21:51.
- *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Bullet extends DynamicGameObject {
@@ -33,7 +32,7 @@ public class Bullet extends DynamicGameObject {
 
     public static final float BULLET_SPEED = 800f;
     public Circle bounds;
-    
+
     //test variables
     public static final float MAX_SPEED = 1000f;
     private float deacceleration = 0;

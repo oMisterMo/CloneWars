@@ -20,8 +20,8 @@ import clonewars.StaticGameObject;
 import java.awt.Graphics2D;
 
 /**
- * 29-Apr-2018, 18:00:53.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public abstract class Droppable extends StaticGameObject {
@@ -40,11 +40,9 @@ public abstract class Droppable extends StaticGameObject {
         return -1;
     }
 
-    @Override
     public void gameUpdate(float deltaTime) {
     }
 
-    @Override
     public void gameRender(Graphics2D g) {
     }
 }

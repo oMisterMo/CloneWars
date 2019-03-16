@@ -21,8 +21,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * 28-Feb-2018, 21:33:04.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class TypeB extends Enemy {

@@ -25,8 +25,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * 13-Mar-2018, 19:16:44.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Joystick extends GameObject {

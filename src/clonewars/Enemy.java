@@ -19,8 +19,8 @@ package clonewars;
 import common.Circle;
 
 /**
- * 22-Feb-2018, 14:37:55.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 abstract class Enemy extends DynamicGameObject {
@@ -68,8 +68,8 @@ abstract class Enemy extends DynamicGameObject {
         System.out.println("NOT CALLED");
         return 0;
     }
-    
-    public int getType(){
+
+    public int getType() {
         //Method should be overridden
         System.out.println("NOT CALLED");
         return -1;  //no enemy of type -1

@@ -20,8 +20,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * 01-May-2018, 01:13:05.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Shield extends Droppable {

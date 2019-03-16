@@ -20,8 +20,8 @@ import clonewars.Assets;
 import java.awt.Graphics2D;
 
 /**
- * 29-Apr-2018, 17:46:49.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Life extends Droppable {
@@ -39,8 +39,6 @@ public class Life extends Droppable {
     public int getType() {
         return Droppable.LIFE;
     }
-    
-    
 
     @Override
     public void gameUpdate(float deltaTime) {

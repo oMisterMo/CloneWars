@@ -26,8 +26,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
 /**
- * 26-Jul-2016, 01:12:17.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Particle extends DynamicGameObject {
@@ -187,12 +187,11 @@ public class Particle extends DynamicGameObject {
             float red = (initColor.getRed() / 255f * initC) + (finalColor.getRed() / 255f * finalC);
             float green = (initColor.getGreen() / 255f * initC) + (finalColor.getGreen() / 255f * finalC);
             float blue = (initColor.getBlue() / 255f * initC) + (finalColor.getBlue() / 255f * finalC);
-            float alpha = (initColor.getAlpha()/ 255f * initC) + (finalColor.getAlpha()/ 255f * finalC);
+            float alpha = (initColor.getAlpha() / 255f * initC) + (finalColor.getAlpha() / 255f * finalC);
 
 //            System.out.println("red: " + red);
 //            System.out.println("green = " + green);
 //            System.out.println("blue = " + blue + "\n");
-
             color = new Color(red, green, blue, alpha);
         }
         //Set color of sprite here

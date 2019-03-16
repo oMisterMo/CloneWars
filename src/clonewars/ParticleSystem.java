@@ -24,8 +24,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
- * 16-Dec-2016, 15:46:00.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class ParticleSystem extends GameObject {
@@ -89,7 +89,7 @@ public class ParticleSystem extends GameObject {
             explosion();
         }
     }
-    
+
     public void playExplosion(Vector2D pos) {
         center.set(pos);
         for (int i = 0; i < MAX_SIZE; i++) {

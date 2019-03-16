@@ -17,17 +17,13 @@
 package clonewars;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Holds all (currently only spikeBlocks)
+ * Holds all assets used in CloneWars.
  *
- * 1.Store each SpriteSheet once 2.Store each Animation 3.Store each Image
- *
- * 11-Jan-2017, 12:25:37.
- *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Assets {
@@ -36,35 +32,34 @@ public class Assets {
     public static BufferedImage skull;      //TYPE C
     public static BufferedImage skull2;     //TYPE A
     public static BufferedImage skull3;     //TYPE B
-    
+
     public static BufferedImage heart;
     public static BufferedImage splat;
-    
+
     //Joystick
-    public static BufferedImage largeCircle;
     public static BufferedImage smallCircle;
+    public static BufferedImage largeCircle;
 
     public Assets() {
-        //Loading all tiles (NOT CALLED)
-//        System.out.println("Loading tiles...");
-//        loadImages();
+        System.out.println("Loading assets...");
+        loadImages();
     }
 
-    public static void loadImages() {
+    public void loadImages() {
         try {
-            player = ImageIO.read(new File("assets\\player.png"));
-            skull = ImageIO.read(new File("assets\\skull.png"));
-            skull2 = ImageIO.read(new File("assets\\skull2.png"));
-            skull3 = ImageIO.read(new File("assets\\skull3.png"));
-            
-            heart = ImageIO.read(new File("assets\\heart.png"));
-            splat = ImageIO.read(new File("assets\\splat.png"));
-            
-            largeCircle = ImageIO.read(new File("assets\\largeCircle.png"));
-            smallCircle = ImageIO.read(new File("assets\\smallCircle.png"));
+            player = ImageIO.read(getClass().getResource("/assets/player.png"));
+            skull = ImageIO.read(getClass().getResource("/assets/skull.png"));
+            skull2 = ImageIO.read(getClass().getResource("/assets/skull2.png"));
+            skull3 = ImageIO.read(getClass().getResource("/assets/skull3.png"));
+
+            heart = ImageIO.read(getClass().getResource("/assets/heart.png"));
+            splat = ImageIO.read(getClass().getResource("/assets/splat.png"));
+
+            smallCircle = ImageIO.read(getClass().getResource("/assets/smallCircle.png"));
+            largeCircle = ImageIO.read(getClass().getResource("/assets/largeCircle.png"));
 
         } catch (IOException e) {
-            System.out.println("Error loading assets (images)...");
+            System.out.println("Error loading assets...");
         }
     }
 }

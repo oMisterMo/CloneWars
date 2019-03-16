@@ -17,14 +17,15 @@
 package clonewars;
 
 /**
- * 02-Mar-2018, 16:07:33.
  *
+ * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class ListToSpawn {
+
     public ToSpawn[] toSpawn;
-    
-    public ListToSpawn(int rangeOfEnemies){
+
+    public ListToSpawn(int rangeOfEnemies) {
         toSpawn = new ToSpawn[rangeOfEnemies];
     }
 }
