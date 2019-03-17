@@ -29,7 +29,7 @@ abstract class Enemy extends DynamicGameObject {
     public static final int TYPEA = 0;
     public static final int TYPEB = 1;
     public static final int TYPEC = 2;
-    private int type = -1;      //curent type of this enemy
+    private int type = -1;      //TYPEA B or C
 
     public static final int ENEMY_CHASE = 0;
     public static final int ENEMY_DEAD = 1;
@@ -51,6 +51,9 @@ abstract class Enemy extends DynamicGameObject {
         bounds = new Circle(x + radius, y + radius, radius);
     }
 
+    /**
+     * Enemy dependant behaviour
+     */
     public void advance() {
         System.out.println("NOT CALLED");
     }
@@ -74,15 +77,4 @@ abstract class Enemy extends DynamicGameObject {
         System.out.println("NOT CALLED");
         return -1;  //no enemy of type -1
     }
-
-//    @Override
-//    void gameUpdate(float deltaTime) {
-////        super.gameUpdate(deltaTime); 
-//        System.out.println("NOO");
-//    }
-//
-//    @Override
-//    void gameRender(Graphics2D g) {
-////        super.gameRender(g);
-//    }
 }

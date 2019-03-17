@@ -47,30 +47,6 @@ public class TypeB extends Enemy {
 
     @Override
     public void advance() {
-//        float x = player.position.x - position.x;
-//        float y = player.position.y - position.y;
-//        if (elapsedTime >= TIME_TO_JUMP) {
-//            float ran = Helper.Random();
-//            if (ran < 0.25f) {
-//                //jump up
-//                velocity.set(0, -JUMP_SPEED);
-//            } else if (ran < 0.5f) {
-//                //jump down
-//                velocity.set(0, JUMP_SPEED);
-//            } else if (ran < 0.75f) {
-//                //jump right
-//                velocity.set(JUMP_SPEED, 0);
-//            } else {
-//                //jump left
-//                velocity.set(-JUMP_SPEED, 0);
-//            }
-//            elapsedTime = 0;
-//        }
-//        float x = player.position.x - position.x;
-//        float y = player.position.y - position.y;
-//        velocity.set(x, y);
-//        velocity.normalize();
-//        velocity.mult(speed);
     }
 
     @Override
@@ -100,34 +76,6 @@ public class TypeB extends Enemy {
                 || position.x + TYPE_B_WIDTH > World.WORLD_WIDTH
                 || position.y < 0
                 || position.y + TYPE_B_HEIGHT > World.WORLD_HEIGHT);
-    }
-
-    private void wrapTYPEBold() {
-//        System.out.println(player.position);
-        //Wrap from left
-        if (position.x < 0 + World.xShift) {
-            position.x = World.WORLD_WIDTH - TYPE_B_WIDTH + World.xShift;
-//            bounds.center.x = World.WORLD_WIDTH - bounds.radius + World.xShift;
-            bounds.center.x = position.x;
-        }
-        //Wrap from right
-        if (position.x > World.WORLD_WIDTH - TYPE_B_WIDTH + World.xShift) {
-            position.x = 0 + World.xShift;
-//            bounds.center.x = bounds.radius + World.xShift;
-            bounds.center.x = position.x;
-        }
-        //Wrap from top
-        if (position.y < 0 + World.yShift) {
-            position.y = World.WORLD_HEIGHT - TYPE_B_HEIGHT + World.yShift;
-//            bounds.center.y = World.WORLD_HEIGHT - bounds.radius + World.yShift;
-            bounds.center.y = position.y;
-        }
-        //Wrap from bottom
-        if (position.y > World.WORLD_HEIGHT - TYPE_B_HEIGHT + World.yShift) {
-            position.y = 0 + World.yShift;
-//            bounds.center.y = bounds.radius + World.yShift;
-            bounds.center.y = position.y;
-        }
     }
 
     private void wrapTypeB() {
@@ -160,7 +108,6 @@ public class TypeB extends Enemy {
 
     @Override
     public void gameUpdate(float deltaTime) {
-//        super.gameUpdate(deltaTime);    //moves enemy
         //Update enemies position
         position.add(velocity.x * deltaTime, velocity.y * deltaTime);
 //        bounds.center.add(velocity.x * deltaTime, velocity.y * deltaTime);
@@ -175,9 +122,6 @@ public class TypeB extends Enemy {
                 break;
             case ENEMY_CHASE:
                 //Update enemies position
-//                position.add(velocity.x * deltaTime, velocity.y * deltaTime);
-//                bounds.center.add(velocity.x * deltaTime, velocity.y * deltaTime);
-//                wrapTYPEBold();
                 wrapTypeB();
                 break;
             case ENEMY_IDLE:

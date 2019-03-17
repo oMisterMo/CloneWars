@@ -24,44 +24,26 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
+ * A ParticleSystem holds a set of Particles that, when combined create a
+ * particular effect.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class ParticleSystem extends GameObject {
 
-    private final static int MAX_SIZE = 15;  //100
+    private final static int MAX_SIZE = 15;
 
     private ArrayList<Particle> particles;
     private Vector2D center;
 
+    /**
+     * Creates a new system with a single effect type
+     */
     public ParticleSystem() {
         particles = new ArrayList<>(MAX_SIZE);
-        center = new Vector2D(GamePanel.GAME_WIDTH / 2f, GamePanel.GAME_HEIGHT / 2f);
-
-//        for (int i = 0; i < MAX_SIZE; i++) {
-////            addWaterfallParticle();
-////            addFireParticle();
-////            testEffect();
-//            explosion();
-//        }
-    }
-
-    private void testEffect() {
-        Particle p = new Particle(
-                center.x,
-                center.y,
-                8f, 8f, //w, h
-                0.8f, 1f, //age, damp
-                0f, 0f, 1f, //rotation
-                1f, 0f, 0f, 1f //scale
-        );
-//        float speed = 80;
-        p.velocity.set(Helper.Random(-100, 100), Helper.Random(-100, 100));
-        p.velocity.normalize();
-        p.velocity.mult(110);
-        p.acceleration.set(0, 0);
-        particles.add(p);
+        center = new Vector2D(GamePanel.GAME_WIDTH / 2f,
+                GamePanel.GAME_HEIGHT / 2f);
     }
 
     private void explosion() {
@@ -72,9 +54,8 @@ public class ParticleSystem extends GameObject {
                 0.6f, 1f, //age, damp
                 0f, 0f, 1f, //rotation
                 1f, 0f, 0f, 1f, //scale
-                Color.RED, Color.BLUE, new Color(0, 255, 0, 0), 0.5f
+                Color.BLUE, new Color(0, 255, 0, 0), 0.5f //init/final col
         );
-//        float speed = 80;
         p.velocity.set(Helper.Random(-100, 100), Helper.Random(-100, 100));
         p.velocity.normalize();
         p.velocity.mult(110);
@@ -97,6 +78,11 @@ public class ParticleSystem extends GameObject {
         }
     }
 
+    /**
+     * Sets the new origin of the particle system to the current touch position.
+     *
+     * @param e key event
+     */
     public void mousePressed(MouseEvent e) {
         System.out.println("Pressed");
 
@@ -109,23 +95,6 @@ public class ParticleSystem extends GameObject {
 //            testEffect();
             explosion();
         }
-    }
-
-    /* FIX ME WITH NEW CONSTRUCTOR */
-    private void addFireParticle() {
-//        int wh = Helper.random(2, 25);
-//        particles.add(
-//                new Particle(
-//                        r.nextInt(1 * 1000) + 1500, //age
-//                        wh, wh, //width, height
-//                        new Vector2D(centerX, centerY), //pos
-//                        new Vector2D(Helper.random(-100, 100), Helper.random(-100, 100)), //vel
-//                        new Vector2D(0, 30f), //acc
-//                        1.0f, //damp
-//                        0f, 0f, 1.0f, //initial rotation, rotVel, rotDamp
-//                        1.0f, 0f, 0f, 3.0f //initial scale, scaleVel, scaleAcc, scalemax
-//                )
-//        );
     }
 
     private void resetParticle(Particle p) {

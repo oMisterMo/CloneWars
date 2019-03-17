@@ -77,12 +77,12 @@ public class Joystick extends GameObject {
     }
 
     /**
-     * Constructor for a custom width and height of the large button
+     * Constructs a new Joystick with a custom width and height.
      *
-     * The small button stays the same size.
+     * The small button stays as the default size.
      *
-     * @param x position
-     * @param y position
+     * @param x the x position
+     * @param y the y position
      * @param width
      * @param height
      */
@@ -118,8 +118,6 @@ public class Joystick extends GameObject {
     }
 
     public void handleMouseDragged(MouseEvent e) {
-//        float x = e.getX();
-//        float y = e.getY();
         touchPos.x = e.getX();
         touchPos.y = e.getY();
 //        System.out.println(touchPos);
@@ -132,10 +130,6 @@ public class Joystick extends GameObject {
             inputVec.set(touchPos.x * 2 - 1, touchPos.y * 2 - 1);
             inputVec = (inputVec.length() > 1) ? inputVec.normalize() : inputVec;
             System.out.println("inputVec: " + inputVec);
-//            offset.set(inputVec.x * (width / 2f) + width - offsetWidth / 2f,
-//                    inputVec.y * (height / 2f) + height - offsetHeight / 2f);
-//            offset.set(inputVec.x * (analogPosition.x + width/2 + offsetWidth / 2f),
-//                    inputVec.y * (analogPosition.y + height/2 + offsetHeight / 2f));
             float size = width / 2f;  //radius
             offset.set(center.x + (inputVec.x * size),
                     center.y + (inputVec.y * size)).sub(offsetWidth / 2, offsetHeight / 2);

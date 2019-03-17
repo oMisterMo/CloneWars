@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import common.Tween;
 import common.Vector2D;
 import clonewars.World.WorldListener;
+
 /**
  *
  * @version 0.1.0
@@ -168,7 +169,7 @@ public class GamePanel extends JPanel implements Runnable {
         //Enable antialiasing
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        
+
         //GAME LOOP
         while (running) {
             //Calculate time since last frame
@@ -258,12 +259,6 @@ public class GamePanel extends JPanel implements Runnable {
                 break;
             case GAME_RUNNING:
                 world.gameUpdate(deltaTime);
-//                if(world.state == World.WORLD_STATE_READY){
-//                    state = GAME_READY;
-//                }
-//                if(world.state == World.WORLD_STATE_GAME_OVER){
-//                    state = GAME_GAMEOVER;
-//                }
                 //Set player pos based on joystick
 //                leftJoy.gameUpdate(deltaTime);
 //                Vector2D pos = leftJoy.getInputVec();
@@ -315,25 +310,15 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    /**
-     * *************** EVENT HANDERLERS ***********************
-     */
-    //Handle Input ** Inner Class
+    /* *************** EVENT HANDERLERS *********************** */
     private class TAdapter extends KeyAdapter {
 
-        //When a key is pressed, let the CRAFT class deal with it.
         @Override
         public void keyPressed(KeyEvent e) {
-            //Handle player from world movement
-//            player.keyPressed(e);
-
-//            world.keyPressed(e);
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            //ship.keyReleased(e);
-//            player.keyReleased(e);
         }
     }
 
@@ -343,7 +328,6 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void mouseClicked(MouseEvent e) {
 //            System.out.println("CLICKED");
-            //Clicked in one position
         }
 
         @Override

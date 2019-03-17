@@ -33,7 +33,6 @@ public class Bullet extends DynamicGameObject {
     public static final float BULLET_SPEED = 800f;
     public Circle bounds;
 
-    //test variables
     public static final float MAX_SPEED = 1000f;
     private float deacceleration = 0;
 
@@ -55,7 +54,6 @@ public class Bullet extends DynamicGameObject {
     }
 
     /**
-     * Test me out sometime
      *
      * @param dt
      */
@@ -79,7 +77,7 @@ public class Bullet extends DynamicGameObject {
     }
 
     public boolean isDead() {
-        return false;
+        return false;   
     }
 
     public boolean bulletOutOfBounds() {
@@ -101,10 +99,5 @@ public class Bullet extends DynamicGameObject {
         g.setColor(Color.WHITE);
         g.fillOval((int) this.position.x, (int) this.position.y,
                 (int) BULLET_WIDTH, (int) BULLET_HEIGHT);
-//        g.drawRect((int) position.x, (int) position.y,      //rect
-//                (int) BULLET_WIDTH, (int) BULLET_HEIGHT);
-//        g.drawRect((int)(bounds.center.x-bounds.radius),  //circle
-//                (int)(bounds.center.y - bounds.radius), 
-//                (int)bounds.radius*2, (int)bounds.radius*2);
     }
 }

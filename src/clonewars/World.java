@@ -123,14 +123,11 @@ public class World extends GameObject {
         printDebug();
         death = new ParticleSystem();
         initGrid();
-        //-----------------------------END my random test
-//        backgroundColor = new Color(0, 0, 0);    //Represents colour of background
-//        backgroundColor = new Color(135,206,235);    //Represents colour of background
     }
 
     private void initWaves() {
         /*
-         Trying to store the data type {id, {int, int][]}
+         Trying to store the data type {id, {int, int}[]}
          could possible be done better using a text file
          */
         //Wave 1
@@ -177,14 +174,6 @@ public class World extends GameObject {
         } else if (Input.isKeyReleased(KeyEvent.VK_N)) {
             scaleTime = 1f;
         }
-        if (Input.isKeyTyped(KeyEvent.VK_X)) {
-//            backgroundColor = new Color(0, 0, 0);
-            setBackgroundColor(0, 0, 0, 255);
-        }
-        if (Input.isKeyTyped(KeyEvent.VK_C)) {
-//            backgroundColor = new Color(100, 120, 100);
-            setBackgroundColor(100, 120, 100, 255);
-        }
         if (Input.isKeyTyped(KeyEvent.VK_R)) {
             reset();
         }
@@ -211,22 +200,14 @@ public class World extends GameObject {
     }
 
     public void handleMouseDragged(MouseEvent e) {
+//        System.out.println("DRAGGED");
         int x = e.getX();
         int y = e.getY();
         touchPos.x = x;
         touchPos.y = y;
-//        player.fire(x, y);
-//        cFire = true;
     }
 
     public void handleMouseMoved(MouseEvent e) {
-//        int x = e.getX();
-//        int y = e.getY();
-//        player.fire(x, y);
-//        mouseCache.x = x;
-//        mouseCache.y = y;
-
-//        cFire = true;
 //        System.out.println("MOVED");
         player.handleMouseMoved(e);
     }
@@ -404,7 +385,6 @@ public class World extends GameObject {
             two.position.set(two.bounds.center).sub(two.bounds.radius, two.bounds.radius);
 
             //Move ball 2 out to oppositie diection
-//            one.position.add(collisionDist.mult(-1));
             one.bounds.center.add(collisionDist.mult(-1));
             one.position.set(one.bounds.center).sub(one.bounds.radius, one.bounds.radius);;
 
@@ -432,19 +412,8 @@ public class World extends GameObject {
     }
 
     private boolean isWaveComplete() {
-//        int a = enemiesKilled[Enemy.TYPEA];
-//        int b = enemiesKilled[Enemy.TYPEB];
-//        int c = enemiesKilled[Enemy.TYPEC];
-//        boolean b = false;
-
-//        int numEnemies = waves[currentWave].toSpawn.length;
-//        for (int i = 0; i < numEnemies; i++) {
         for (int i = 0; i < Enemy.NO_OF_ENEMIES; i++) {
             //No of enemies killed >= amount of enemies per wave
-//            System.out.println(waves[currentWave].toSpawn[i].getAmount());
-//            if (enemiesKilled[i] <= waves[currentWave].toSpawn[i].getAmount()) {
-//                return false;
-//            }
             if (enemiesToKill[i] > 0) {
                 return false;
             }
@@ -600,22 +569,7 @@ public class World extends GameObject {
     }
 
     private void clearSplats() {
-        //attemp 1
-//        When you remove an element from an array, it resizes
-//        int len = splats.size();
-//        System.out.println("len of splats: "+len);
-//        for (int i = 0; i < splats.size(); i++) {
-////            System.out.println("i: "+i);
-//            splats.remove(i);
-//        }
-
-//        //attemp 2
-//        System.out.println("Clearing splats...");
-//        int len = splats.size();
-//        for(int i=len -1; i>=0; i--){
-//            splats.remove(i);
-//        }
-        //attemp 3 (clear to let GC do its work)
+        //clear to let GC do its work
         splats.clear(); //sets all elements to null
 
     }
@@ -701,6 +655,21 @@ public class World extends GameObject {
         }
     }
 
+    private void drawHashGrid(Graphics2D g) {
+        g.setColor(Color.YELLOW);
+        int cell = (int) grid.getCellSize();
+//        cell += (int) WORLD_POS.x;
+        //draw vertical
+        for (int i = cell; i < WORLD_WIDTH; i += cell) {
+//            g.drawLine(i, 0, i, (int) WORLD_HEIGHT);
+            g.drawLine(i + xShift, 0 + yShift, i + xShift, (int) WORLD_HEIGHT + yShift);
+        }
+//        //draw horizontal
+        for (int i = cell; i < WORLD_HEIGHT; i += cell) {
+            g.drawLine(0 + xShift, i + yShift, (int) WORLD_WIDTH + xShift, i + yShift);
+        }
+    }
+
     @Override
     void gameUpdate(float deltaTime) {
         //********** Do updates HERE **********
@@ -739,33 +708,5 @@ public class World extends GameObject {
         g.drawString("Lives: " + player.lives, WORLD_WIDTH - 140, 30);
 //        drawDeadInfo(g);
 //        drawSpawnInfo(g);
-    }
-
-    private void drawHashGrid(Graphics2D g) {
-        g.setColor(Color.YELLOW);
-        int cell = (int) grid.getCellSize();
-//        cell += (int) WORLD_POS.x;
-        //draw vertical
-        for (int i = cell; i < WORLD_WIDTH; i += cell) {
-//            g.drawLine(i, 0, i, (int) WORLD_HEIGHT);
-            g.drawLine(i + xShift, 0 + yShift, i + xShift, (int) WORLD_HEIGHT + yShift);
-        }
-//        //draw horizontal
-        for (int i = cell; i < WORLD_HEIGHT; i += cell) {
-            g.drawLine(0 + xShift, i + yShift, (int) WORLD_WIDTH + xShift, i + yShift);
-        }
-    }
-
-    public void setBackgroundColor(int r, int g, int b, int a) {
-        backgroundColor = new Color(r, g, b, a);
-    }
-
-    /**
-     * Only for debugging to get the players information and draw it
-     *
-     * @return player
-     */
-    public Player getPlayer() {
-        return player;
     }
 }

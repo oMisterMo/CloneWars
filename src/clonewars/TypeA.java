@@ -43,21 +43,8 @@ public class TypeA extends Enemy {
         velocity.mult(speed);
     }
 
-//    public TypeA(float x, float y, float width, float height, Player player, float velX, float velY) {
-//        super(x, y, width, height, player);
-//        this.velocity.set(velX, velY);
-//        stateTime = 0;
-//    }
-    /**
-     * Enemy specific behaviour
-     */
     @Override
     public void advance() {
-//        Vector2D pos = player.position.sub(position);
-        //Attempt2
-//        float x = player.bounds.lowerLeft.x - bounds.center.x;
-//        float y = player.bounds.lowerLeft.y - bounds.center.y;
-
         float x = player.position.x - position.x;
         float y = player.position.y - position.y;
         velocity.set(x, y);
@@ -97,7 +84,6 @@ public class TypeA extends Enemy {
 
     @Override
     public void gameUpdate(float deltaTime) {
-//        super.gameUpdate(deltaTime);    //moves enemy
         if (state == ENEMY_OFFSCREEN) {
             //Update enemies position
             position.add(velocity.x * deltaTime, velocity.y * deltaTime);
@@ -120,18 +106,13 @@ public class TypeA extends Enemy {
         g.drawImage(Assets.skull2, (int) position.x, (int) position.y,
                 (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT, null);
 
-        //draw position
+        //draw bounds
 //        g.setColor(Color.RED);
 //        g.drawRect((int) position.x, (int) position.y,      //rect
 //                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
 //        g.drawRect((int) bounds.center.x, (int) bounds.center.y, 1, 1);   //dot
 //        g.drawOval((int) (bounds.center.x - bounds.radius),
 //                (int) (bounds.center.y - bounds.radius),
-//                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
-        //draw bounds (test)
-//        g.setColor(Color.WHITE);
-//        g.drawOval((int) (position.x), //circle
-//                (int) (position.y),
 //                (int) TYPE_A_WIDTH, (int) TYPE_A_HEIGHT);
     }
 

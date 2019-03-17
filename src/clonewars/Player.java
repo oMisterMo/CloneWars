@@ -177,12 +177,7 @@ public class Player extends DynamicGameObject {
 
         bullet.velocity.normalize();
         bullet.velocity.mult(Bullet.BULLET_SPEED);
-//        bullet.velocity.setLength(300);
-//        float angle = bullet.velocity.angle();
-//        System.out.println("angle: " + angle);
-//        System.out.println("len: " + bullet.velocity.length());
 
-        //a new bullet to the arraylist
         bullets.add(bullet);
 //        System.out.println("bullets.size() = " + bullets.size());
     }
@@ -219,17 +214,11 @@ public class Player extends DynamicGameObject {
         }
     }
 
-    /**
-     * ************UPDATE & RENDER
-     *
-     **************
-     * @param deltaTime
-     */
+    /* ********************* UPDATE & RENDER ************************* */
     @Override
     public void gameUpdate(float deltaTime) {
 //        System.out.println(state);
         position.add(velocity.x * deltaTime, velocity.y * deltaTime);
-//        bounds.topLeft.add(velocity.x * deltaTime, velocity.y * deltaTime);
         bounds.topLeft.set(position);
         //Update bullets
         updateBullets(deltaTime);
@@ -246,11 +235,11 @@ public class Player extends DynamicGameObject {
         drawBullets(g);
 
         g.setColor(Color.WHITE);
-        g.drawString("vel: " + velocity, 10, 50);
+//        g.drawString("vel: " + velocity, 10, 50);
     }
 
     private void drawPlayer(Graphics2D g) {
-        //Draw Sprite
+        //Draw rotated Sprite
         AffineTransform old = g.getTransform();
         trans.setToIdentity();  //AffineTransform trans = new AffineTransform();
         float centerX = (position.x + PLAYER_WIDTH / 2);
@@ -262,9 +251,6 @@ public class Player extends DynamicGameObject {
 
         g.drawImage(Assets.player, (int) position.x, (int) position.y,
                 (int) PLAYER_WIDTH, (int) PLAYER_HEIGHT, null);
-//        g.setColor(Color.BLUE);
-//        g.drawRect((int) position.x, (int) position.y,
-//                (int) PLAYER_WIDTH, (int) PLAYER_HEIGHT);
 
         g.setTransform(old);
 
