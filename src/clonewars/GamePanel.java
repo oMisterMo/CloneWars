@@ -35,6 +35,7 @@ import common.Vector2D;
 import clonewars.World.WorldListener;
 
 /**
+ * Game screen which ties together all classes.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -47,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int GAME_READY = 0;
     public static final int GAME_RUNNING = 1;
     public static final int GAME_GAMEOVER = 2;
-    public static int state = GAME_READY;
+    public static int state = GAME_READY;       //current state
 //    public static int state = GAME_RUNNING;
 
     private boolean running = false;
@@ -75,6 +76,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     private Font smallFont, largeFont;
 
+    /**
+     * Constructs a new Game instance and initialise all variables.
+     */
     public GamePanel() {
         super();
         setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
@@ -298,7 +302,7 @@ public class GamePanel extends JPanel implements Runnable {
     private void drawHelp() {
         //Draw FPS in red
         g.setColor(Color.RED);
-        g.drawString("FPS:" + averageFPS, 25, 25);
+        g.drawString("FPS:" + averageFPS, 5, 25);
         //Draw players info
 //        Player p = world.getPlayer();
 //        p.drawInfo(g);
@@ -310,7 +314,7 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    /* *************** EVENT HANDERLERS *********************** */
+    /* *************** EVENT HANDLERS *********************** */
     private class TAdapter extends KeyAdapter {
 
         @Override
@@ -366,8 +370,7 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void mouseMoved(MouseEvent e) {
 //            System.out.println("MOVED");
-            //All movement
-            world.handleMouseMoved(e);
+//            world.handleMouseMoved(e);
         }
 
     }

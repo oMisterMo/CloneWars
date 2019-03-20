@@ -19,11 +19,12 @@ package clonewars;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 /**
+ * The Player handles all interactions the user has with the games world. The
+ * Player can move in eight directions (up, down, left, right and diagonals).
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -50,6 +51,12 @@ public class Player extends DynamicGameObject {
     private float rotation;
     private AffineTransform trans;
 
+    /**
+     * Creates a new player at the position provided with its default size.
+     *
+     * @param x the x position
+     * @param y the y position
+     */
     public Player(float x, float y) {
         super(x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 
@@ -97,38 +104,46 @@ public class Player extends DynamicGameObject {
 
     private void diagonals() {
         //Up-Right
-        if (Input.isKeyPressed(KeyEvent.VK_W) && Input.isKeyPressed(KeyEvent.VK_D)) {
+        if (Input.isKeyPressed(KeyEvent.VK_W)
+                && Input.isKeyPressed(KeyEvent.VK_D)) {
             rotation = 225;
         }
         //Right-Down
-        if (Input.isKeyPressed(KeyEvent.VK_D) && Input.isKeyPressed(KeyEvent.VK_S)) {
+        if (Input.isKeyPressed(KeyEvent.VK_D)
+                && Input.isKeyPressed(KeyEvent.VK_S)) {
             rotation = 315;
         }
         //Down-Left
-        if (Input.isKeyPressed(KeyEvent.VK_S) && Input.isKeyPressed(KeyEvent.VK_A)) {
+        if (Input.isKeyPressed(KeyEvent.VK_S)
+                && Input.isKeyPressed(KeyEvent.VK_A)) {
             rotation = 45;
         }
         //Left-Up
-        if (Input.isKeyPressed(KeyEvent.VK_A) && Input.isKeyPressed(KeyEvent.VK_W)) {
+        if (Input.isKeyPressed(KeyEvent.VK_A)
+                && Input.isKeyPressed(KeyEvent.VK_W)) {
             rotation = 135;
         }
     }
 
+    /**
+     * Handles all movement input from the player.
+     */
     public void handleInput() {
+//        if(state == PLAYER_HURT) return;
         upDownLeftRight();
         diagonals();
     }
 
-    public void handleMouseMoved(MouseEvent e) {
-//        System.out.println("playermoved");
-//        System.out.println("vel.angle()"+velocity.angle());
-//        rotation = velocity.angle() + 270;
-    }
-
+    /**
+     * Called when the player is hit.
+     */
     public void hurt() {
         state = PLAYER_HURT;
     }
 
+    /**
+     * Called when the player loses all of its lives.
+     */
     public void die() {
 //        velocity.set(0,0);
 //        state = STATE_DEAD;
@@ -137,7 +152,7 @@ public class Player extends DynamicGameObject {
     /**
      * NOT USED CURRENTLY!!!!
      *
-     * @return
+     * @return true if player is out of bounds
      */
     public boolean playerOutOfBounds() {
         return (position.x < 0
@@ -170,18 +185,13 @@ public class Player extends DynamicGameObject {
         }
     }
 
-    public void fire(int x, int y) {
-        Bullet bullet = new Bullet(position.x + PLAYER_WIDTH / 2 - Bullet.BULLET_WIDTH / 2,
-                position.y + PLAYER_HEIGHT / 2 - Bullet.BULLET_HEIGHT / 2);
-        bullet.velocity.set(x - bullet.position.x, y - bullet.position.y);
-
-        bullet.velocity.normalize();
-        bullet.velocity.mult(Bullet.BULLET_SPEED);
-
-        bullets.add(bullet);
-//        System.out.println("bullets.size() = " + bullets.size());
-    }
-
+    /**
+     * Creates a new bullet object and sets the velocity based on the position
+     * given. The bullet has a default magnitude.
+     *
+     * @param x
+     * @param y
+     */
     public void fire(float x, float y) {
         Bullet bullet = new Bullet(position.x + PLAYER_WIDTH / 2 - Bullet.BULLET_WIDTH / 2,
                 position.y + PLAYER_HEIGHT / 2 - Bullet.BULLET_HEIGHT / 2);
@@ -194,14 +204,12 @@ public class Player extends DynamicGameObject {
     }
 
     private void updateBullets(float deltaTime) {
-        int size = bullets.size();
-        for (int i = size - 1; i >= 0; i--) {
+        for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             b.gameUpdate(deltaTime);
             if (b.bulletOutOfBounds()) {
 //                System.out.println("bullet out of bound -> removing");
                 bullets.remove(b);
-//                size = bullets.size();
             }
         }
     }
@@ -234,14 +242,15 @@ public class Player extends DynamicGameObject {
         //Draw fireballs
         drawBullets(g);
 
-        g.setColor(Color.WHITE);
+//        g.setColor(Color.WHITE);
 //        g.drawString("vel: " + velocity, 10, 50);
     }
 
     private void drawPlayer(Graphics2D g) {
-        //Draw rotated Sprite
+        /*Draw rotated Sprite*/
         AffineTransform old = g.getTransform();
         trans.setToIdentity();  //AffineTransform trans = new AffineTransform();
+        //Get the center of the player
         float centerX = (position.x + PLAYER_WIDTH / 2);
         float centerY = (position.y + PLAYER_HEIGHT / 2);
         trans.translate(centerX, centerY);

@@ -17,6 +17,8 @@
 package clonewars;
 
 /**
+ * The ToSpawn class is an enemy spawn helper. The class stores the type and
+ * amount of enemies to spawn on a level.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -26,16 +28,31 @@ public class ToSpawn {
     private final int type;
     private final int amount;
 
+    /**
+     * Initialise the fields to the parameters passed into the constructor.
+     *
+     * @param type the type of enemy to spawn
+     * @param amount the amount of enemies to spawn
+     */
     public ToSpawn(int type, int amount) {
         this.type = type;
         this.amount = amount;
     }
 
-    /* Getters & Setters */
+    /**
+     * Return the type.
+     *
+     * @return the type of enemy to spawn
+     */
     public int getType() {
         return type;
     }
 
+    /**
+     * Return the amount.
+     *
+     * @return the amount of enemies to spawn
+     */
     public int getAmount() {
         return amount;
     }

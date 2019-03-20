@@ -17,7 +17,9 @@
 package items;
 
 /**
+ * Incomplete, the player will have multiple fire modes.
  *
+ * Gun -> Single fire, MultiFire, TripleFire
  * @version 0.1.0
  * @author Mohammed Ibrahim
  */

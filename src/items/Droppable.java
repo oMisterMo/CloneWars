@@ -20,6 +20,7 @@ import clonewars.StaticGameObject;
 import java.awt.Graphics2D;
 
 /**
+ * The abstract class Droppable represents all droppable items.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -30,10 +31,23 @@ public abstract class Droppable extends StaticGameObject {
     public static final int SHEILD = 1;
     public static int type = -1;
 
+    /**
+     * Initialises a droppable game object.
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param width the width of the item
+     * @param height the height of the item
+     */
     public Droppable(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
+    /**
+     * Gets the specific type of item.
+     *
+     * @return the unique integer representing the item
+     */
     public int getType() {
         //Overriden, doesn't get called
         System.out.println("Should not get called");

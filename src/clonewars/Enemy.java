@@ -19,6 +19,7 @@ package clonewars;
 import common.Circle;
 
 /**
+ * Abstract Enemy class describing the common behaviours of all enemies.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim

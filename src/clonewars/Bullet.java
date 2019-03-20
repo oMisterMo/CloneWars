@@ -22,6 +22,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
+ * The Bullet class represents a single bullet instance which is fired across
+ * the screen. The velocity is set manually after creation.
+ *
  * @version 0.1.0
  * @author Mohammed Ibrahim
  */
@@ -29,13 +32,18 @@ public class Bullet extends DynamicGameObject {
 
     public static final float BULLET_WIDTH = 7;
     public static final float BULLET_HEIGHT = 7;
-
     public static final float BULLET_SPEED = 800f;
     public Circle bounds;
-
     public static final float MAX_SPEED = 1000f;
     private float deacceleration = 0;
 
+    /**
+     * Constructs a new bullet at x,y which represents the top-left corner of
+     * the object.
+     *
+     * @param x the x position
+     * @param y the y position
+     */
     public Bullet(float x, float y) {
         super(x, y, BULLET_WIDTH, BULLET_HEIGHT);
         float radius = BULLET_WIDTH / 2;   //had radius = width = 2 (:|)
@@ -54,32 +62,10 @@ public class Bullet extends DynamicGameObject {
     }
 
     /**
-     *
-     * @param dt
+     * Checks if the bullet object is outside of the viewport.
+     * 
+     * @return true if bullet is out of bounds
      */
-    public void applyPhysics(float dt) {
-        //Apply acceleration
-        velocity.add(acceleration.x * dt, acceleration.y * dt);
-        float speed = velocity.length();
-        //Decrease speed when not accelerating
-        if (acceleration.length() == 0) {
-            speed -= deacceleration * dt;
-        }
-        //Kepp speed in bounds
-        speed = Helper.Clamp(speed, 0, MAX_SPEED);
-        //Update velocity
-        setSpeed(speed);
-        //Apply velocity
-        position.add(velocity.x * dt, velocity.y * dt);
-        //Reset acceleration
-        acceleration.set(0, 0);
-
-    }
-
-    public boolean isDead() {
-        return false;   
-    }
-
     public boolean bulletOutOfBounds() {
         return (position.x < 0
                 || position.x + Bullet.BULLET_WIDTH > World.WORLD_WIDTH

@@ -20,6 +20,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
+ * The TypeA enemy is similar to Blinky in the game Pacman, it follows the exact
+ * location of the player.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -30,6 +32,14 @@ public class TypeA extends Enemy {
     public static final float TYPE_A_HEIGHT = 25;
     private float speed;
 
+    /**
+     * Constructs a new TypeA enemy at the position given. The initial velocity
+     * is set in the direction of the player.
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param player reference to the player
+     */
     public TypeA(float x, float y, Player player) {
         super(x, y, TYPE_A_WIDTH, TYPE_A_HEIGHT, player);
         stateTime = 0;
@@ -52,6 +62,9 @@ public class TypeA extends Enemy {
         velocity.mult(speed);
     }
 
+    /**
+     * This method is called when the enemy is hit.
+     */
     @Override
     public void die() {
 //        System.out.println("STATE = dead");
@@ -60,21 +73,41 @@ public class TypeA extends Enemy {
         velocity.x = 0;
     }
 
+    /**
+     * Gets the current state of the enemy.
+     *
+     * @return enemy state
+     */
     @Override
     public float getState() {
         return state;
     }
 
+    /**
+     * Gets the time the enemy has been in a certain state in seconds.
+     *
+     * @return state time
+     */
     @Override
     public float getStateTime() {
         return stateTime;
     }
 
+    /**
+     * Gets the type of the enemy.
+     *
+     * @return enemy type
+     */
     @Override
     public int getType() {
         return Enemy.TYPEA;
     }
 
+    /**
+     * Checks to see if the enemy is off screen.
+     *
+     * @return true if the enemy is out of bounds.
+     */
     public boolean enemyOutOfBounds() {
         return (position.x < 0
                 || position.x + TYPE_A_WIDTH > World.WORLD_WIDTH

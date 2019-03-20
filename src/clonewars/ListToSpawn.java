@@ -17,6 +17,8 @@
 package clonewars;
 
 /**
+ * The ListToSpawn class stores the type and amount of enemies to spawn for each
+ * wave.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -25,6 +27,13 @@ public class ListToSpawn {
 
     public ToSpawn[] toSpawn;
 
+    /**
+     * The default constructor initialises the array with the amount of unique
+     * enemies there are on a given level.
+     *
+     * @param rangeOfEnemies number of unique enemies from 1 - n (number of
+     * enemies)
+     */
     public ListToSpawn(int rangeOfEnemies) {
         toSpawn = new ToSpawn[rangeOfEnemies];
     }

@@ -20,7 +20,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- *
+ * This simple class represents a shield dropped by an enemy.
+ * 
  * @version 0.1.0
  * @author Mohammed Ibrahim
  */
@@ -29,8 +30,15 @@ public class Shield extends Droppable {
     public static final float SHEILD_WIDTH = 25;
     public static final float SHEILD_HEIGHT = 25;
 
-    public Shield(float x, float y, float width, float height) {
-        super(x, y, width, height);
+    /**
+     * Constructs a new shield where the x,y coordinates represent the top-left
+     * corner of the object.
+     *
+     * @param x the x position
+     * @param y the y position
+     */
+    public Shield(float x, float y) {
+        super(x, y, SHEILD_WIDTH, SHEILD_HEIGHT);
     }
 
     @Override

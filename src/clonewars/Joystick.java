@@ -25,74 +25,66 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
+ * The Joystick class enables users to implement a virtual controller. The
+ * Joystick class gets input from the MouseListener and MouseMotionListener
+ * classes. The {@link #inputVec inputVec} field is public and is used by the
+ * application to get the input received from the user.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
  */
 public class Joystick extends GameObject {
 
-    private Vector2D analogPosition;    //main position     (center)
+    private Vector2D analogPosition;    //main position
     private float width;
     private float height;
 
-    private Vector2D offset;            //anolog position
+    private Vector2D offset;            //joystick position
     private float offsetWidth;
     private float offsetHeight;
 
     private Vector2D center;
-    public Rectangle bounds;
+
+    private Rectangle bounds;
 
     private Vector2D touchPos;
-    private Vector2D inputVec;
+    private Vector2D inputVec;          //direction pushed
 
+    /**
+     * Constructs a new Joystick at the position given with its default size.
+     *
+     * @param x the x position
+     * @param y the y position
+     */
     public Joystick(int x, int y) {
         BufferedImage lc = Assets.largeCircle;
         this.width = lc.getWidth();
         this.height = lc.getHeight();
-        this.center = new Vector2D(x + width / 2, y + height / 2);
-        this.analogPosition = new Vector2D(x, y);
-        System.out.println("anlog pos: " + analogPosition);
-        System.out.println("width: " + width);
-        System.out.println("height: " + height);
-        System.out.println("center: " + center);
+        updatePos(x, y, width, height);
+    }
 
-        BufferedImage sc = Assets.smallCircle;
-        offsetWidth = sc.getWidth();
-        offsetHeight = sc.getHeight();
-        float tempX, tempY;
-//        tempX = (x + width) / 2f - offsetWidth / 2f;
-//        tempY = (y + height) / 2f - offsetHeight / 2f;
-        tempX = center.x - offsetWidth / 2;
-        tempY = center.y - offsetHeight / 2;
-        this.offset = new Vector2D(tempX, tempY);
-        System.out.println("offset pos: " + offset);
-        float moWidth, moHeight;
-        moWidth = 100;
-        moHeight = 100;
-        bounds = new Rectangle(analogPosition.x - moWidth / 2,
-                analogPosition.y - moHeight / 2, width + moWidth,
-                height + moHeight);
+    /**
+     * Constructs a new Joystick with a custom width and height. The joystick
+     * stays as the default size.
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param w the new width
+     * @param h the new height
+     */
+    public Joystick(int x, int y, int w, int h) {
+        updatePos(x, y, w, h);
         touchPos = new Vector2D();
         inputVec = new Vector2D();
     }
 
-    /**
-     * Constructs a new Joystick with a custom width and height.
-     *
-     * The small button stays as the default size.
-     *
-     * @param x the x position
-     * @param y the y position
-     * @param width
-     * @param height
-     */
-    public Joystick(float x, float y, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.center = new Vector2D(x + width / 2, y + height / 2);
+    private void updatePos(float x, float y, float w, float h) {
+        this.width = w;
+        this.height = h;
+        this.center = new Vector2D(x + w / 2, y + h / 2);
         this.analogPosition = new Vector2D(x, y);
-        System.out.println("width = " + width);
-        System.out.println("height = " + height);
+        System.out.println("width = " + w);
+        System.out.println("height = " + h);
         System.out.println("center: " + center);
 
         BufferedImage sc = Assets.smallCircle;
@@ -107,16 +99,25 @@ public class Joystick extends GameObject {
         moWidth = 100;
         moHeight = 100;
         bounds = new Rectangle(analogPosition.x - moWidth / 2,
-                analogPosition.y - moHeight / 2, width + moWidth,
-                height + moHeight);
-        touchPos = new Vector2D();
-        inputVec = new Vector2D();
+                analogPosition.y - moHeight / 2, w + moWidth,
+                h + moHeight);
     }
 
+    /**
+     * When the mouse is just pressed, call handleMouseDragged.
+     *
+     * @param e mouse event
+     */
     public void handleMousePressed(MouseEvent e) {
         handleMouseDragged(e);
     }
 
+    /**
+     * Sets the {@link #inputVec inputVel} based on the joystick. Only updates
+     * if the touch position is within the bounds of the bounding box.
+     *
+     * @param e mouse event
+     */
     public void handleMouseDragged(MouseEvent e) {
         touchPos.x = e.getX();
         touchPos.y = e.getY();
@@ -136,12 +137,22 @@ public class Joystick extends GameObject {
         }
     }
 
+    /**
+     * Resets the position of the joystick when the mouse is released.
+     *
+     * @param e mouse event
+     */
     public void handleMouseReleased(MouseEvent e) {
         //Analog let go, reset values
         inputVec.set(0, 0);
         offset.set(center).sub(offsetWidth / 2, offsetHeight / 2);
     }
 
+    /**
+     * The input velocity based on the users touch of the virtual joystick.
+     *
+     * @return values from -1 to 1
+     */
     public Vector2D getInputVec() {
         return inputVec;
     }

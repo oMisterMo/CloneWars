@@ -20,6 +20,7 @@ import clonewars.Assets;
 import java.awt.Graphics2D;
 
 /**
+ * This simple class represents a splat left behind when an enemy dies.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -31,8 +32,15 @@ public class Splat extends Droppable {
 
     public static final int MAX_NUM_SPLATS = 10;
 
-    public Splat(float x, float y, float width, float height) {
-        super(x, y, width, height);
+    /**
+     * Constructs a new splat where the x,y coordinates represent the top-left
+     * corner of the object.
+     *
+     * @param x the x position
+     * @param y the y position
+     */
+    public Splat(float x, float y) {
+        super(x, y, SPLAT_WIDTH, SPLAT_HEIGHT);
     }
 
     @Override

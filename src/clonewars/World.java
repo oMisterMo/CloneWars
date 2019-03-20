@@ -32,6 +32,12 @@ import items.Shield;
 import items.Splat;
 
 /**
+ * The World class handles the games simulation. It is responsible for
+ * integrating all classes and ensuring that they interact correctly.
+ *
+ * The world listener keeps the simulation class clean from any direct
+ * dependencies on rendering and audio playback. This may come in handy when
+ * migrating the games logic to another engine or language.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -58,7 +64,7 @@ public class World extends GameObject {
     private static int[] spawnTracker;
 
     private final WorldListener listener;
-    public Player player;
+    private Player player;
     private ArrayList<Enemy> enemies;
     private ParticleSystem death;
 
@@ -77,13 +83,15 @@ public class World extends GameObject {
     private SpatialHashGrid grid;
     private float scaleTime = 1f;
 
+    /**
+     * Constructs a new world.
+     *
+     * @param lis world listener
+     */
     public World(WorldListener lis) {
         this.listener = lis;
         init();
         state = WORLD_STATE_RUNNING;
-//        spawnEnemy();
-//        spawnEnemy();
-        System.out.println("background Color: " + backgroundColor);
         System.out.println("World loaded...");
     }
 
@@ -167,6 +175,9 @@ public class World extends GameObject {
         System.out.println("SpatialHashGrid created...");
     }
 
+    /**
+     * Handles all key presses in the game world.
+     */
     public void handleKeyEvents() {
         //Extra inputs
         if (Input.isKeyPressed(KeyEvent.VK_N)) {
@@ -182,6 +193,11 @@ public class World extends GameObject {
         player.handleInput();
     }
 
+    /**
+     * Handle mouse held down.
+     *
+     * @param e mouse event
+     */
     public void handleMousePressed(MouseEvent e) {
 //        System.out.println("WORLD Pressed!");
         int x = e.getX();
@@ -194,11 +210,21 @@ public class World extends GameObject {
         cFire = true;
     }
 
+    /**
+     * Handle mouse release.
+     *
+     * @param e mouse event
+     */
     public void handleMouseReleased(MouseEvent e) {
 //        System.out.println("WORLD RELEASED!");
         cFire = false;
     }
 
+    /**
+     * Handle mouse dragged.
+     *
+     * @param e mouse event
+     */
     public void handleMouseDragged(MouseEvent e) {
 //        System.out.println("DRAGGED");
         int x = e.getX();
@@ -207,17 +233,12 @@ public class World extends GameObject {
         touchPos.y = y;
     }
 
-    public void handleMouseMoved(MouseEvent e) {
-//        System.out.println("MOVED");
-        player.handleMouseMoved(e);
-    }
-
     private void continousFire() {
         //limit fire rate
         if (elapsedGun >= GUN_COOLDOWN) {
             if (cFire) {
-                listener.fire();
                 //fire
+                listener.fire();
                 player.fire(touchPos.x, touchPos.y);
             }
             elapsedGun = 0;
@@ -243,23 +264,21 @@ public class World extends GameObject {
 //        System.out.println("Random num generated: " + num);
         if (num < 0.005f) {
             items.add(new Life(x - Life.LIFE_WIDTH / 2,
-                    y - Life.LIFE_HEIGHT / 2,
-                    Life.LIFE_WIDTH, Life.LIFE_HEIGHT));
+                    y - Life.LIFE_HEIGHT / 2));
         } else if (num < 0.05) {
             items.add(new Shield(x - Shield.SHEILD_WIDTH / 2,
-                    y - Shield.SHEILD_HEIGHT / 2,
-                    Shield.SHEILD_WIDTH, Shield.SHEILD_HEIGHT));
+                    y - Shield.SHEILD_HEIGHT / 2));
         }
     }
 
     private void leaveSplat(float x, float y) {
         float num = Helper.Random();
 //        System.out.println("Random num generated: " + num);
-        if (num < 0.5f) {
+        if (num < 0.1f) {
             int numSplats = splats.size();
             if (numSplats < Splat.MAX_NUM_SPLATS) {
-                splats.add(new Splat(x - Splat.SPLAT_WIDTH / 2, y - Splat.SPLAT_HEIGHT / 2,
-                        Splat.SPLAT_WIDTH, Splat.SPLAT_HEIGHT));
+                splats.add(new Splat(x - Splat.SPLAT_WIDTH / 2,
+                        y - Splat.SPLAT_HEIGHT / 2));
             } else {
                 System.out.println("Can't create any more splats");
             }
@@ -574,6 +593,9 @@ public class World extends GameObject {
 
     }
 
+    /**
+     * Loads the next wave and resets objects.
+     */
     public void loadNextWave() {
         System.out.println("Loading next wave...");
         player.velocity.set(0, 0);
@@ -602,8 +624,7 @@ public class World extends GameObject {
     }
 
     private void updateEnemies(float deltaTime) {
-        int len = enemies.size() - 1;
-        for (int i = len; i >= 0; i--) {
+        for (int i = enemies.size() - 1; i >= 0; i--) {
             Enemy e = enemies.get(i);
             e.gameUpdate(deltaTime);
             //as soon as enemy is hit, remove from array
@@ -682,7 +703,7 @@ public class World extends GameObject {
         player.gameUpdate(deltaTime);
         handleSpawn();
         updateEnemies(deltaTime);
-        death.gameUpdate(deltaTime);
+        death.gameUpdate(deltaTime);    //needs refactoring
 
 //        //Check for collisions
 //        handleCollisionHashgrid();

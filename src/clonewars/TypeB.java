@@ -21,6 +21,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
+ * The TypeB enemy sets its initial velocity to the location of the player. It
+ * carries on moving slowly in that direction and wraps around when it reaches
+ * the bounds of the viewport.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -32,6 +35,14 @@ public class TypeB extends Enemy {
 
     private float speed;
 
+    /**
+     * Constructs a new TypeB enemy at the position given. The initial velocity
+     * is set in the direction of the player.
+     *
+     * @param x the x position
+     * @param y the y position
+     * @param player reference to the player
+     */
     public TypeB(float x, float y, Player player) {
         super(x, y, TYPE_B_WIDTH, TYPE_B_HEIGHT, player);
         stateTime = 0;
@@ -49,6 +60,9 @@ public class TypeB extends Enemy {
     public void advance() {
     }
 
+    /**
+     * This method is called when the enemy is hit.
+     */
     @Override
     public void die() {
         state = ENEMY_DEAD;
@@ -56,21 +70,41 @@ public class TypeB extends Enemy {
         velocity.x = 0;
     }
 
+    /**
+     * Gets the current state of the enemy.
+     *
+     * @return enemy state
+     */
     @Override
     public float getState() {
         return state;
     }
 
+    /**
+     * Gets the time the enemy has been in a certain state in seconds.
+     *
+     * @return state time
+     */
     @Override
     public float getStateTime() {
         return stateTime;
     }
 
+    /**
+     * Gets the type of the enemy.
+     *
+     * @return enemy type
+     */
     @Override
     public int getType() {
         return Enemy.TYPEB;
     }
 
+    /**
+     * Checks to see if the enemy is off screen.
+     *
+     * @return true if the enemy is out of bounds.
+     */
     public boolean enemyOutOfBounds() {
         return (position.x < 0
                 || position.x + TYPE_B_WIDTH > World.WORLD_WIDTH
@@ -110,7 +144,6 @@ public class TypeB extends Enemy {
     public void gameUpdate(float deltaTime) {
         //Update enemies position
         position.add(velocity.x * deltaTime, velocity.y * deltaTime);
-//        bounds.center.add(velocity.x * deltaTime, velocity.y * deltaTime);
         bounds.center.set(position).add(bounds.radius, bounds.radius);
 
         switch (state) {

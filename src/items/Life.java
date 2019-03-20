@@ -20,6 +20,7 @@ import clonewars.Assets;
 import java.awt.Graphics2D;
 
 /**
+ * This simple class represents an extra life dropped by an enemy.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
@@ -30,8 +31,14 @@ public class Life extends Droppable {
     public static final float LIFE_HEIGHT = 32;
     public static int stateTime;
 
-    public Life(float x, float y, float width, float height) {
-        super(x, y, width, height);
+    /**
+     * Constructs a new life object at the position specified.
+     *
+     * @param x the x position
+     * @param y the y position
+     */
+    public Life(float x, float y) {
+        super(x, y, LIFE_WIDTH, LIFE_HEIGHT);
         stateTime = 0;
     }
 
@@ -49,7 +56,7 @@ public class Life extends Droppable {
     @Override
     public void gameRender(Graphics2D g) {
         g.drawImage(Assets.heart, (int) position.x, (int) position.y, null);
-        g.drawRect((int) bounds.topLeft.x, (int) bounds.topLeft.y,
-                (int) bounds.width, (int) bounds.height);
+//        g.drawRect((int) bounds.topLeft.x, (int) bounds.topLeft.y,
+//                (int) bounds.width, (int) bounds.height);
     }
 }
