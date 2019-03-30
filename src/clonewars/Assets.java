@@ -29,10 +29,13 @@ import javax.imageio.ImageIO;
 public class Assets {
 
     public static BufferedImage player;
+    
+    //Enemies
     public static BufferedImage skull;      //TYPE C
     public static BufferedImage skull2;     //TYPE A
     public static BufferedImage skull3;     //TYPE B
 
+    //Items
     public static BufferedImage heart;
     public static BufferedImage splat;
 
@@ -40,12 +43,21 @@ public class Assets {
     public static BufferedImage smallCircle;
     public static BufferedImage largeCircle;
 
+    /**
+     * Initialises assets.
+     */
     public Assets() {
         System.out.println("Loading assets...");
         loadImages();
     }
 
-    public void loadImages() {
+    /**
+     * Loads all assets from the classes relative path. The getResource
+     * method causes the class loader to look through the directories and JAR
+     * files in the program's class path, returning a URL as soon as it finds
+     * the desired file.
+     */
+    private void loadImages() {
         try {
             player = ImageIO.read(getClass().getResource("/assets/player.png"));
             skull = ImageIO.read(getClass().getResource("/assets/skull.png"));

@@ -31,7 +31,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import common.Tween;
-import common.Vector2D;
 import clonewars.World.WorldListener;
 
 /**
@@ -83,7 +82,6 @@ public class GamePanel extends JPanel implements Runnable {
         super();
         setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
         setFocusable(true);
-        //System.out.println(requestFocusInWindow());
         requestFocus(); //-> platform dependant
 
         initInput();

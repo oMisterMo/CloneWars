@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 /**
+ * Main Class.
  *
  * @version 0.1.0
  * @author Mohammed Ibrahim
